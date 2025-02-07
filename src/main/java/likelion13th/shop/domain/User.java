@@ -19,14 +19,14 @@ public class User {
     private String username;
 
     private String provider_id;
-    private Boolean deleteable; //베릴님꺼에는 db에 비트라 되어있어요
+    private Boolean deleteable; //베릴님꺼에는 db에 비트라 되어있긴한데,,
     private Long phone_numer;
 
     private int mileage;
     private int recent_total;
 
-    //erd에는 있길래..
-    //private String grade;
+    //erd에는 있길래
+     //private String grade;
     //private String profile_img_path;
     //private String password;
 

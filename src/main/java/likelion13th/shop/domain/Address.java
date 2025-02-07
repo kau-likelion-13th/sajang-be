@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 @Embeddable
 //User 테이블 내부에 값타입으로 포함됨
 public class Address {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String zipcode;

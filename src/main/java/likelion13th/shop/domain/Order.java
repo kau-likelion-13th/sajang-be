@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "orders") //예약어 회피
 @Getter
 @Setter
 public class Order {
@@ -23,6 +24,15 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    //Item, User 와 연관관계 설정
+    @ManyToOne(fetch = FetchType.EAGER) //즉시 조회로 해봤어요
+    @JoinColumn(name = "item_id")
+    private Item item;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     //생성자 -> 객체 생성될 때 자동으로 실행! 즉 초기 설정을 할 때 사용
     public Order(User user, Item item, int quantity) {
         this.user = user;
@@ -33,15 +43,10 @@ public class Order {
         this.totalPrice = item.getPrice() * quantity;
         this.finalPrice = getFinalPrice();
     }
+    //기본 생성자는 JPA를 위해 필요하지만, 외부에서는 호출 못 하도록 `protected` 사용!
+    protected Order() {
 
-    //Item, User 와 연관관계 설정
-    @ManyToOne(fetch = FetchType.EAGER) //즉시 조회로 해봤어요
-    @JoinColumn(name = "item_id")
-    private Item item;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User user;
+    }
 
     //양방향 편의 메서드
     public void setUser(User user) {
