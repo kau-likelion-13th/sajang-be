@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "users")
 @Getter
 public class User {
     @Id
@@ -16,8 +17,10 @@ public class User {
     @Column(name="user_id")
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false, unique = true)
     private String provider_id;
     private Boolean deleteable; //베릴님꺼에는 db에 비트라 되어있긴한데,,
     private Long phone_numer;
