@@ -43,5 +43,18 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
+    //양방향 편의 메서드
+    public void setUser(User user) {
+        this.user=user;
+        user.getOrders().add(this); // 반대쪽 객체에도 연관관계를 설정
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+        if (!item.getOrders().contains(this)) {
+            item.getOrders().add(this);
+        }
+    }
+    
 
 }
