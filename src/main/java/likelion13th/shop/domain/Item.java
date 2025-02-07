@@ -30,4 +30,7 @@ public class Item {
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
 
+    //Item과 일대다 연관관계 설정
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<Order> orders = new ArrayList<>();
 }

@@ -22,6 +22,13 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
-    
 
+    //Item, User 와 연관관계 설정
+    @ManyToOne(fetch = FetchType.EAGER) //즉시 조회로 해봤어요
+    @JoinColumn(name = "item_id")
+    private Item item;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

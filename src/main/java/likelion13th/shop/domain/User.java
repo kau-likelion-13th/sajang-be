@@ -36,5 +36,7 @@ public class User {
     @Embedded
     private Address address;
 
-
+    //Order과 일대다 연관관계 설정
+    @OneToMany(mappedBy="user")
+    private List<Order> orders = new ArrayList<Order>();
 }
