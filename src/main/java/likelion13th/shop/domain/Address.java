@@ -16,6 +16,4 @@ public class Address {
     @Column(columnDefinition = "TEXT")
     private String address_detail;
 
-
-
 }
