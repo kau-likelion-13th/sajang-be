@@ -32,7 +32,7 @@ public class User {
 
     @CreatedDate
     private LocalDate sub_date;
-    
+
 
 
 }

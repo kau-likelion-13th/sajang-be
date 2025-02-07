@@ -2,7 +2,7 @@ package likelion13th.shop.domain;
 
 import jakarta.persistence.*;
 
-@Entity
+@Embeddable
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
