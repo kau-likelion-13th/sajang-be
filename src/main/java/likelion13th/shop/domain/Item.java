@@ -1,6 +1,7 @@
 package likelion13th.shop.domain;
 
 import jakarta.persistence.*;
+import likelion13th.shop.domain.entity.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,19 +13,23 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Item {
+public class Item extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(name = "item_id")
     private Long id;
 
+    @Column(nullable = false)
     private String item_name;
-    private int price;
-    private String thumbnail_img;
-    private String brand;
 
-    @CreatedDate
-    private LocalDate created_date;
+    @Column(nullable = false)
+    private int price;
+
+    @Column(nullable = false)
+    private String thumbnail_img;
+
+    @Column(nullable = false)
+    private String brand;
 
     //Category와 다대다 연관관계 설정
     @ManyToMany(mappedBy = "items")

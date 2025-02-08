@@ -1,40 +1,50 @@
 package likelion13th.shop.domain;
 
 import jakarta.persistence.*;
+import likelion13th.shop.domain.entity.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @Getter
-public class User {
+@Setter
+@NoArgsConstructor
+//파라미터가 없는 디폴트 생성자 자동으로 생성
+@AllArgsConstructor
+//클래스의 모든 필드 값을 파라미터로 받는 생성자 자동으로 생성
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private String usernickname;
 
     @Column(nullable = false, unique = true)
-    private String provider_id;
-    private Boolean deleteable; //베릴님꺼에는 db에 비트라 되어있긴한데,,
-    private Long phone_numer;
+    private String providerId;
 
-    private int mileage;
-    private int recent_total;
+    @Column(nullable = false)
+    private Boolean deleteable;
+
+    @Column(nullable = false)
+    private Long phoneNumer;
+
+    @Column(nullable = false)
+    private int mileage=0;
+
+    @Column(nullable = false)
+    private int recent_total=0;
 
     //erd에는 있길래
      //private String grade;
     //private String profile_img_path;
     //private String password;
-
-    @CreatedDate
-    private LocalDate sub_date;
 
     @Embedded
     private Address address;

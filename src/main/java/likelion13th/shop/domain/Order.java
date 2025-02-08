@@ -1,7 +1,10 @@
 package likelion13th.shop.domain;
 
 import jakarta.persistence.*;
+import likelion13th.shop.domain.entity.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -10,16 +13,22 @@ import java.time.LocalDateTime;
 @Table(name = "orders") //예약어 회피
 @Getter
 @Setter
-public class Order {
+@NoArgsConstructor //Lombok의..
+//파라미터가 없는 디폴트 생성자 자동으로 생성
+public class Order extends BaseEntity {
     @Id
     @GeneratedValue
-    @Column(name="order_id")
+    @Column(name="order_id", nullable = false, unique = true)
     private Long id;
 
+    @Column(nullable = false)
     private int quantity;
+
+    @Column(nullable = false)
     private int totalPrice;
+
+    @Column(nullable = false)
     private int finalPrice;
-    private LocalDateTime created_date;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
@@ -38,14 +47,9 @@ public class Order {
         this.user = user;
         this.item = item;
         this.quantity = quantity;
-        this.created_date = LocalDateTime.now();
         this.status = OrderStatus.PROCESSING;
         this.totalPrice = item.getPrice() * quantity;
         this.finalPrice = getFinalPrice();
-    }
-    //기본 생성자는 JPA를 위해 필요하지만, 외부에서는 호출 못 하도록 `protected` 사용!
-    protected Order() {
-
     }
 
     //양방향 편의 메서드

@@ -12,10 +12,10 @@ import java.util.List;
 public class Category {
     @Id
     @GeneratedValue
-    @Column(name="category_id")
+    @Column(name="category_id", nullable=false, unique = true)
     private Long id;
 
-    @Column(name="category_name")
+    @Column(name="category_name", nullable = false)
     private String name;
 
     //Item과 다대다 연관관계 설정
