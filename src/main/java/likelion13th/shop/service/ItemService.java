@@ -26,7 +26,7 @@ public class ItemService {
     public List<Item> getItemsByCategory(Long categoryId){
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
-        return itemRepository.findByCategory(category);
+        return itemRepository.findByCategories(category);
     }
     //상품 수정, 상품 삭제,
 
