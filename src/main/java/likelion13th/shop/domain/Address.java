@@ -5,12 +5,15 @@ import jakarta.persistence.*;
 @Embeddable
 //User 테이블 내부에 값타입으로 포함됨
 public class Address {
+
     @Column(nullable = false)
     private String zipcode;
+
     @Lob
     @Column(columnDefinition = "TEXT", nullable = false)
     //TEXT 타입을 java 엔티티에서 매핑
     private String address;
+
     @Lob
     @Column(columnDefinition = "TEXT", nullable = false)
     private String address_detail;

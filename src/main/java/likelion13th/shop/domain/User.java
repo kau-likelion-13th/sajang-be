@@ -11,9 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
-@Setter
 @NoArgsConstructor
 //파라미터가 없는 디폴트 생성자 자동으로 생성
 @AllArgsConstructor
@@ -21,6 +20,7 @@ import java.util.List;
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="user_id", nullable = false, unique = true)
     private Long id;
 
     @Column(nullable = false, unique = true)

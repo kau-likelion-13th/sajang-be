@@ -8,11 +8,11 @@ import java.util.List;
 
 @Entity
 @Getter
-
+@Table(name = "category")
 public class Category {
     @Id
-    @GeneratedValue
-    @Column(name="category_id", nullable=false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable=false, unique = true)
     private Long id;
 
     @Column(name="category_name", nullable = false)

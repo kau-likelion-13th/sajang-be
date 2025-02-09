@@ -2,22 +2,18 @@ package likelion13th.shop.domain;
 
 import jakarta.persistence.*;
 import likelion13th.shop.domain.entity.BaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "orders") //예약어 회피
 @Getter
-@Setter
 @NoArgsConstructor //Lombok의..
 //파라미터가 없는 디폴트 생성자 자동으로 생성
 public class Order extends BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="order_id", nullable = false, unique = true)
     private Long id;
 
