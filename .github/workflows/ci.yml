@@ -36,13 +36,17 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
-      # gradle build 전 데이터베이스 준비
-
-
       # Gradle 실행 권한 부여 (Linux 환경)
       - name: Grant execute permission for Gradlew
         run: chmod +x gradlew
 
+      # GitHub Secrets를 활용한 환경 변수 설정
+      - name: Set up environment variables
+        run:
+            echo "local.db.url=${{ secrets.LOCAL_DB_URL }}" >> $GITHUB_ENV
+            echo "local.db.username=${{ secrets.LOCAL_DB_USERNAME }}" >> $GITHUB_ENV
+            echo "local.db.password=${{ secrets.LOCAL_DB_PASSWORD }}" >> $GITHUB_ENV
+
       # Gradle 빌드 & 테스트 실행
       - name: Build and Test with Gradle
-        run: ./gradlew clean build --info
+        run: ./gradlew clean build
