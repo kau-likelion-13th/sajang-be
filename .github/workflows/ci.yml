@@ -15,6 +15,22 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest  # GitHub Actions의 기본 Ubuntu 환경 사용
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root --password=root"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
       # GitHub Repository의 코드 가져오기
       - name: Checkout Repository
@@ -39,6 +55,13 @@ jobs:
       # Gradle 실행 권한 부여 (Linux 환경)
       - name: Grant execute permission for Gradlew
         run: chmod +x gradlew
+
+      # GitHub Secrets를 활용한 환경 변수 설정
+      - name: Set up environment variables
+        run:
+            echo "local.db.url=${{ secrets.LOCAL_DB_URL }}" >> $GITHUB_ENV
+            echo "local.db.username=${{ secrets.LOCAL_DB_USERNAME }}" >> $GITHUB_ENV
+            echo "local.db.password=${{ secrets.LOCAL_DB_PASSWORD }}" >> $GITHUB_ENV
 
       # Gradle 빌드 & 테스트 실행
       - name: Build and Test with Gradle
