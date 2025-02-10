@@ -1,6 +1,7 @@
 package likelion13th.shop.service;
 
 import jakarta.transaction.Transactional;
+import likelion13th.shop.DTO.ItemUpdateRequest;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Item;
 import likelion13th.shop.repository.CategoryRepository;
@@ -28,7 +29,28 @@ public class ItemService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         return itemRepository.findByCategories(category);
     }
-    //상품 수정, 상품 삭제,
+
+    //상품 수정 - 이름과 가격
+    public Item updateItem(Long itemId, ItemUpdateRequest request){
+        //상품 조회 (존재하지 않으면 예외 발생)
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 상품을 찾을 수 없습니다."));
+
+        //필드 수정 (null 값이 아닌 경우만 업데이트)
+        if (request.getName() != null) {
+            item.setItem_name(request.getName());
+        }
+        if (request.getPrice() != null && request.getPrice() > 0) {
+            item.setPrice(request.getPrice());
+        }
+        return item;
+    }
+
+    // 상품 삭제
+    public void deleteItem(Long itemId){
+        itemRepository.deleteById(itemId);
+    }
+
 
 
 

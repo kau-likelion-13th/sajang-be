@@ -3,12 +3,14 @@ package likelion13th.shop.domain;
 import jakarta.persistence.*;
 import likelion13th.shop.domain.entity.BaseEntity;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "item")
 public class Item extends BaseEntity {
     @Id
