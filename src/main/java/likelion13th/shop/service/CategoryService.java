@@ -1,5 +1,8 @@
 package likelion13th.shop.service;
 
+import jakarta.transaction.Transactional;
+import likelion13th.shop.DTO.CategoryCreateRequest;
+import likelion13th.shop.DTO.ItemCreateRequest;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Item;
 import likelion13th.shop.repository.CategoryRepository;
@@ -12,9 +15,19 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
-    private CategoryRepository categoryRepository;
-    private ItemRepository itemRepository;
+    private final CategoryRepository categoryRepository;
+    private final ItemRepository itemRepository;
 
+    //카테고리 추가
+    @Transactional
+    public Category createCategory(CategoryCreateRequest request) {
+        //DTO -> Entity
+        Category category = new Category(
+                request.getName()
+        );
+
+        return categoryRepository.save(category);
+    }
     //모든 카테고리 조회
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();

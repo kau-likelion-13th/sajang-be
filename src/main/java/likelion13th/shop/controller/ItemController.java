@@ -29,19 +29,5 @@ public class ItemController {
         Item item = itemService.getItemById(itemId);
         return ResponseEntity.ok(item);
     }
-    //상품 수정
-    @PutMapping("/{itemId}")
-    public ResponseEntity<Item> updateItem(
-            @PathVariable Long itemId,
-            @RequestBody ItemUpdateRequest request){
 
-        Item updatedItem = itemService.updateItem(itemId, request);
-        return ResponseEntity.ok(updatedItem);
-    }
-    //상품 삭제
-    @DeleteMapping("/{itemId}")
-    public ResponseEntity<String> deleteItem(@PathVariable Long itemId) {
-        itemService.deleteItem(itemId);
-        return ResponseEntity.ok("상품이 삭제되었습니다.");
-    }
 }

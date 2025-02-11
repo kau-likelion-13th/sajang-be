@@ -1,15 +1,15 @@
 package likelion13th.shop.controller;
 
+import likelion13th.shop.DTO.CategoryCreateRequest;
+import likelion13th.shop.DTO.ItemCreateRequest;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Item;
 import likelion13th.shop.service.CategoryService;
 import likelion13th.shop.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +19,13 @@ import java.util.List;
 public class CategoryController {
     private final ItemService itemService;
     private final CategoryService categoryService;
+
+    //카테고리 추가
+    @PostMapping("/new")
+    public  ResponseEntity<Category> createCategory(@RequestBody CategoryCreateRequest request){
+        Category newCategory = categoryService.createCategory(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newCategory);
+    }
 
     //카테고리 전체 조회
     @GetMapping

@@ -67,9 +67,16 @@ public class ItemService {
     }
 
     // 상품 삭제
+    @Transactional
     public void deleteItem(Long itemId){
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(()-> new IllegalArgumentException("Item not found"));
+
+        for (Category category : item.getCategories()) {
+            category.getItems().remove(item);
+        }
+        item.getCategories().clear();
+
         itemRepository.delete(item);
     }
 
