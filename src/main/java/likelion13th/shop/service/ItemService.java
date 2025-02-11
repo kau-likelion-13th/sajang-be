@@ -30,6 +30,16 @@ public class ItemService {
         return itemRepository.findByCategories(category);
     }
 
+    //개별 상품 조회
+    public Item getItemById(Long itemId) {
+        return itemRepository.findById(itemId).orElseThrow(() -> new RuntimeException("Item not found"));
+    }
+
+    //모든 상품 조회
+    public List<Item> getAllItems(){
+        return itemRepository.findAll();
+    }
+
     //상품 수정 - 이름과 가격
     public Item updateItem(Long itemId, ItemUpdateRequest request){
         //상품 조회 (존재하지 않으면 예외 발생)
