@@ -2,7 +2,9 @@ package likelion13th.shop.domain;
 
 import jakarta.persistence.*;
 import likelion13th.shop.domain.entity.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "item")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Item extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +41,19 @@ public class Item extends BaseEntity {
     //Item과 일대다 연관관계 설정
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
+
+
+
+    public Item(String item_name, int price, String thumbnail_img, String brand) {
+        this.item_name = item_name;
+        this.price = price;
+        this.thumbnail_img = thumbnail_img;
+        this.brand = brand;
+    }
+
+    // 양방향 관계 설정
+    public void addCategory(Category category) {
+        this.categories.add(category);
+        category.getItems().add(this);
+    }
 }

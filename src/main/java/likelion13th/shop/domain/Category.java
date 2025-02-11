@@ -2,6 +2,7 @@ package likelion13th.shop.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Table(name = "category")
+@NoArgsConstructor
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +26,10 @@ public class Category {
             joinColumns = @JoinColumn(name="category_id"),
             inverseJoinColumns=@JoinColumn(name="item_id"))
     private List<Item> items = new ArrayList<>();
+
+    // 양방향 관계 설정
+    public void addItem(Item item) {
+        this.items.add(item);
+        item.getCategories().add(this);
+    }
 }

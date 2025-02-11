@@ -1,6 +1,7 @@
 package likelion13th.shop.service;
 
 import jakarta.transaction.Transactional;
+import likelion13th.shop.DTO.ItemCreateRequest;
 import likelion13th.shop.DTO.ItemUpdateRequest;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Item;
@@ -19,15 +20,24 @@ public class ItemService {
 
     //상품 추가
     @Transactional
-    public Item saveItem(Item item) {
-        return itemRepository.save(item);
-    }
+    public Item createItem(ItemCreateRequest request) {
+        //DTO -> Entity
+        Item item = new Item(
+                request.getItem_name(),
+                request.getPrice(),
+                request.getThumbnail_img(),
+                request.getBrand()
+        );
 
-    //상품 조회(카테고리별)
-    public List<Item> getItemsByCategory(Long categoryId){
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        return itemRepository.findByCategories(category);
+        // 카테고리 연관관계 추가
+        if (request.getCategory_id() != null) {
+            for (Long category_id : request.getCategory_id()) {
+                Category category = categoryRepository.findById(category_id)
+                        .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다: " + category_id));
+                item.addCategory(category); //자동으로 category_item 테이블에 데이터 추가됨
+            }
+        }
+        return itemRepository.save(item);
     }
 
     //개별 상품 조회
@@ -58,7 +68,9 @@ public class ItemService {
 
     // 상품 삭제
     public void deleteItem(Long itemId){
-        itemRepository.deleteById(itemId);
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(()-> new IllegalArgumentException("Item not found"));
+        itemRepository.delete(item);
     }
 
 
