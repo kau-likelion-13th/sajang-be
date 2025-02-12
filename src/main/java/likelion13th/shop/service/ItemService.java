@@ -23,7 +23,7 @@ public class ItemService {
     public Item createItem(ItemCreateRequest request) {
         //DTO -> Entity
         Item item = new Item(
-                request.getItem_name(),
+                request.getName(),
                 request.getPrice(),
                 request.getThumbnail_img(),
                 request.getBrand()
@@ -51,6 +51,8 @@ public class ItemService {
     }
 
     //상품 수정 - 이름과 가격
+    @Transactional
+    //jPA에서는 얘 있으면 save()호출하지 않아도 자동으로 업데이트
     public Item updateItem(Long itemId, ItemUpdateRequest request){
         //상품 조회 (존재하지 않으면 예외 발생)
         Item item = itemRepository.findById(itemId)
@@ -60,7 +62,7 @@ public class ItemService {
         if (request.getName() != null) {
             item.setItem_name(request.getName());
         }
-        if (request.getPrice() != null && request.getPrice() > 0) {
+        if (request.getPrice() != null) {
             item.setPrice(request.getPrice());
         }
         return item;

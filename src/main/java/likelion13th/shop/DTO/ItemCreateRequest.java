@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ItemCreateRequest {
     private String id;
-    private String item_name;
+    private String name;
     private int price;
     private String thumbnail_img;
     private String brand;

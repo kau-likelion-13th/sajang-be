@@ -18,30 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
-    private final ItemService itemService;
 
-    //상품 추가
-    @PostMapping("/new")
-    public  ResponseEntity<Item> createItem(@RequestBody ItemCreateRequest request){
-        Item newItem = itemService.createItem(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newItem);
-    }
-
-    //상품 수정
-    @PutMapping("/{itemId}")
-    public ResponseEntity<Item> updateItem(
-            @PathVariable Long itemId,
-            @RequestBody ItemUpdateRequest request){
-
-        Item updatedItem = itemService.updateItem(itemId, request);
-        return ResponseEntity.ok(updatedItem);
-    }
-    //상품 삭제
-    @DeleteMapping("/{itemId}")
-    public ResponseEntity<String> deleteItem(@PathVariable Long itemId) {
-        itemService.deleteItem(itemId);
-        return ResponseEntity.ok("상품이 삭제되었습니다.");
-    }
     //테스트 데이터 전체 삭제 API
     @DeleteMapping("/reset")
     public ResponseEntity<String> resetDatabase() {
