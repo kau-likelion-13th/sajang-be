@@ -12,6 +12,8 @@ import likelion13th.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -41,10 +43,39 @@ public class OrderService {
             finalPrice = 0; // 마일리지가 초과 사용되지 않도록 방지
         }
         user.useMileage(mileageToUse);
+        user.addMileage((int)(finalPrice*0.1));//결제 금액의 10% 마일리지 적립
         //주문 생성과 동시에 배송 중으로 설정
-        //주문 생성 및 저장
         Order order = new Order(user, item, request.getQuantity(), finalPrice);
         order.setStatus(OrderStatus.PROCESSING);
         return orderRepository.save(order);
     }
+
+    public Order getOrderById(Long orderId) {
+        return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+    }
+
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    //삭제가 아니라 주문 상태만 변경
+    //배송 완료된 상품, 주문 취소된 상품은 주문 취소 불가능
+    public Order cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
+
+        if (order.getStatus() == OrderStatus.COMPLETE || order.getStatus() == OrderStatus.CANCEL) {
+            throw new IllegalStateException("배송 완료된 주문 또는 이미 취소된 주문은 취소할 수 없습니다.");
+        }
+        //주문 상태 변경
+        order.setStatus(OrderStatus.CANCEL);
+        //마일리지 환불 및 주문에 대한 마일리지 차감
+        User user = order.getUser();
+        user.addMileage(order.getTotalPrice() - order.getFinalPrice());
+        user.useMileage((int)(order.getFinalPrice()*0.1));
+        //변경 사항 저장
+        orderRepository.save(order);
+        return order;
+    }
+
 }

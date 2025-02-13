@@ -37,7 +37,7 @@ public class OrderController {
         Order newOrder = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
     }*/
-    
+
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody OrderCreateRequest request) {
         Order newOrder = orderService.createOrder(request);
@@ -45,26 +45,26 @@ public class OrderController {
     }
 
     //2. 특정 주문 조회
-    /*@GetMapping("/{orderId}")
+    @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
         Order order = orderService.getOrderById(orderId);
         return ResponseEntity.ok(order);
-    }*/
+    }
 
 
     //3. 모든 주문 목록 조회
-    /*@GetMapping
+    @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
         List<Order> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
-    }*/
+    }
 
     //4. 주문 취소
-    /*@PutMapping("/{orderId}/cancel")
+    @PutMapping("/{orderId}/cancel")
     public ResponseEntity<Order> cancelOrder(@PathVariable Long orderId) {
         Order canceledOrder = orderService.cancelOrder(orderId);
         return ResponseEntity.ok(canceledOrder);
-    }*/
+    }
 
 }
 

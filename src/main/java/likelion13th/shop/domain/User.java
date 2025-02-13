@@ -57,5 +57,8 @@ public class User extends BaseEntity {
     public void useMileage(int mileage){
         this.mileage -= mileage;
     }
-
+    //마일리지 적립 로직
+    public void addMileage(int mileage) {
+        this.mileage += mileage;
+    }
 }
