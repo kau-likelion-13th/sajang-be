@@ -52,4 +52,10 @@ public class User extends BaseEntity {
     //Order과 일대다 연관관계 설정
     @OneToMany(mappedBy="user")
     private List<Order> orders = new ArrayList<Order>();
+
+    //마일리지 차감 로직
+    public void useMileage(int mileage){
+        this.mileage -= mileage;
+    }
+
 }

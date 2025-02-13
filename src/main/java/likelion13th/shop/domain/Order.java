@@ -9,7 +9,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "orders") //예약어 회피
 @Getter
-@NoArgsConstructor //Lombok의..
+@Setter
+@NoArgsConstructor
 //파라미터가 없는 디폴트 생성자 자동으로 생성
 public class Order extends BaseEntity {
     @Id
@@ -21,7 +22,7 @@ public class Order extends BaseEntity {
     private int quantity;
 
     @Column(nullable = false)
-    private int totalPrice;
+    private int totalPrice; //기존 주문 내역을 유지하기 위해
 
     @Column(nullable = false)
     private int finalPrice;
@@ -39,13 +40,18 @@ public class Order extends BaseEntity {
     private User user;
 
     //생성자 -> 객체 생성될 때 자동으로 실행! 즉 초기 설정을 할 때 사용
-    public Order(User user, Item item, int quantity) {
+    public Order(User user, Item item, int quantity, int mileageToUse) {
         this.user = user;
         this.item = item;
         this.quantity = quantity;
         this.status = OrderStatus.PROCESSING;
         this.totalPrice = item.getPrice() * quantity;
-        this.finalPrice = getFinalPrice();
+        this.finalPrice = calculateFinalPrice(mileageToUse);
+    }
+    //마일리지 적용 로직
+    private int calculateFinalPrice(int mileageToUse) {
+        int finalPrice = totalPrice - mileageToUse;
+        return Math.max(finalPrice, 0);  // 최소 결제 금액 0원 보장
     }
 
     //양방향 편의 메서드
@@ -60,6 +66,4 @@ public class Order extends BaseEntity {
             item.getOrders().add(this);
         }
     }
-    
-
 }
