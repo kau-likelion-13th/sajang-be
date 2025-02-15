@@ -5,6 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+import likelion13th.shop.domain.Address;
 import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.global.exception.GeneralException;
@@ -64,6 +65,7 @@ public class UserService {
                 .deleteable(true)                        // 기본값 true
                 .mileage(0)                              // 초기 마일리지 0
                 .recentTotal(0)                          // 초기 결제 금액 0
+                .address(new Address("~", "주소를 입력해주세요", "주소를 입력해주세요"))
                 .build();
 
         // 🔹 유저 저장

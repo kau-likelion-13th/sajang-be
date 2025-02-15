@@ -19,7 +19,7 @@ public class RefreshToken {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", unique = true) // ✅ user_id를 유니크 키로만 사용
+    @JoinColumn(name = "users_id", unique = true) // ✅ users_id를 유니크 키로만 사용
     private User user;
 
     private String refreshToken;
