@@ -1,14 +1,9 @@
 package likelion13th.shop.controller;
 
-import likelion13th.shop.DTO.ItemCreateRequest;
-import likelion13th.shop.DTO.ItemUpdateRequest;
 import likelion13th.shop.domain.Category;
-import likelion13th.shop.domain.Item;
 import likelion13th.shop.repository.CategoryRepository;
 import likelion13th.shop.repository.ItemRepository;
-import likelion13th.shop.service.ItemService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

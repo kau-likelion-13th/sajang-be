@@ -1,6 +1,7 @@
 package likelion13th.shop.controller;
 
 import likelion13th.shop.DTO.ItemCreateRequest;
+import likelion13th.shop.DTO.ItemResponseDto;
 import likelion13th.shop.DTO.ItemUpdateRequest;
 import likelion13th.shop.domain.Item;
 import likelion13th.shop.service.ItemService;
@@ -18,8 +19,8 @@ public class ItemController {
     //상품 추가
     //테스트를 위해 남겨둠?
     @PostMapping("/new")
-    public  ResponseEntity<Item> createItem(@RequestBody ItemCreateRequest request){
-        Item newItem = itemService.createItem(request);
+    public  ResponseEntity<ItemResponseDto> createItem(@RequestBody ItemCreateRequest request){
+        ItemResponseDto newItem = itemService.createItem(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(newItem);
     }
 

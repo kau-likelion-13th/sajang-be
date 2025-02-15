@@ -2,6 +2,7 @@ package likelion13th.shop.service;
 
 import jakarta.transaction.Transactional;
 import likelion13th.shop.DTO.ItemCreateRequest;
+import likelion13th.shop.DTO.ItemResponseDto;
 import likelion13th.shop.DTO.ItemUpdateRequest;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Item;
@@ -20,7 +21,7 @@ public class ItemService {
 
     //상품 추가
     @Transactional
-    public Item createItem(ItemCreateRequest request) {
+    public ItemResponseDto createItem(ItemCreateRequest request) {
         //DTO -> Entity
         Item item = new Item(
                 request.getName(),
@@ -37,7 +38,8 @@ public class ItemService {
                 item.addCategory(category); //자동으로 category_item 테이블에 데이터 추가됨
             }
         }
-        return itemRepository.save(item);
+        Item savedItem = itemRepository.save(item);
+        return ItemResponseDto.from(savedItem);
     }
 
     //개별 상품 조회

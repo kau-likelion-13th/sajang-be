@@ -2,6 +2,7 @@ package likelion13th.shop.service;
 
 import jakarta.transaction.Transactional;
 import likelion13th.shop.DTO.OrderCreateRequest;
+import likelion13th.shop.DTO.OrderResponseDto;
 import likelion13th.shop.domain.Item;
 import likelion13th.shop.domain.Order;
 import likelion13th.shop.domain.OrderStatus;
@@ -22,8 +23,9 @@ public class OrderService {
     private final ItemRepository itemRepository;
 
     @Transactional
-    public Order createOrder(OrderCreateRequest request) {
+    public OrderResponseDto createOrder(OrderCreateRequest request) {
         //이미 `userId`가 컨트롤러에서 설정됨 → 여기서 별도로 조회할 필요 없음
+
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
@@ -32,7 +34,7 @@ public class OrderService {
 
         //총 주문 금액 계산
         int totalPrice = item.getPrice() * request.getQuantity();
-        //마일리지 적용
+        //마일리지 사용 로직
         int mileageToUse = request.getMileageToUse();
         if (mileageToUse > user.getMileage()) {
             throw new IllegalArgumentException("보유한 마일리지를 초과하여 사용할 수 없습니다.");
@@ -42,12 +44,15 @@ public class OrderService {
         if (finalPrice < 0) {
             finalPrice = 0; // 마일리지가 초과 사용되지 않도록 방지
         }
+
         user.useMileage(mileageToUse);
         user.addMileage((int)(finalPrice*0.1));//결제 금액의 10% 마일리지 적립
         //주문 생성과 동시에 배송 중으로 설정
         Order order = new Order(user, item, request.getQuantity(), finalPrice);
         order.setStatus(OrderStatus.PROCESSING);
-        return orderRepository.save(order);
+        //주문 저장
+        orderRepository.save(order);
+        return OrderResponseDto.from(order);
     }
 
     public Order getOrderById(Long orderId) {

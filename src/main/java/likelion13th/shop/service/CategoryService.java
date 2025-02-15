@@ -28,6 +28,7 @@ public class CategoryService {
 
         return categoryRepository.save(category);
     }
+
     //모든 카테고리 조회
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();

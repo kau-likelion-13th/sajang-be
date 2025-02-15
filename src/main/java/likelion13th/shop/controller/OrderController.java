@@ -1,6 +1,7 @@
 package likelion13th.shop.controller;
 
 import likelion13th.shop.DTO.OrderCreateRequest;
+import likelion13th.shop.DTO.OrderResponseDto;
 import likelion13th.shop.domain.Order;
 import likelion13th.shop.repository.OrderRepository;
 import likelion13th.shop.service.OrderService;
@@ -39,8 +40,8 @@ public class OrderController {
     }*/
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody OrderCreateRequest request) {
-        Order newOrder = orderService.createOrder(request);
+    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderCreateRequest request) {
+        OrderResponseDto newOrder = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
     }
 

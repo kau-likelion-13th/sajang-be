@@ -11,5 +11,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //save, findById, findAll은 자동생성
     List<User> findByUsernickname(String usernickname);
 
-    Optional<User> findByKakaoId(String kakaoId); // ✅ 카카오 ID로 유저 조회
+    //Optional<User> findByKakaoId(String kakaoId); // ✅ 카카오 ID로 유저 조회
 }
