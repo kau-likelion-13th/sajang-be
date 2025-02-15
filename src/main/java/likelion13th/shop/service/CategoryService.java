@@ -2,7 +2,8 @@ package likelion13th.shop.service;
 
 import jakarta.transaction.Transactional;
 import likelion13th.shop.DTO.CategoryCreateRequest;
-import likelion13th.shop.DTO.ItemCreateRequest;
+import likelion13th.shop.DTO.CategoryResponseDto;
+import likelion13th.shop.DTO.ItemResponseDto;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Item;
 import likelion13th.shop.repository.CategoryRepository;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,24 +22,29 @@ public class CategoryService {
 
     //카테고리 추가
     @Transactional
-    public Category createCategory(CategoryCreateRequest request) {
+    public CategoryResponseDto createCategory(CategoryCreateRequest request) {
         //DTO -> Entity
-        Category category = new Category(
-                request.getName()
-        );
-
-        return categoryRepository.save(category);
+        Category category = new Category(request.getName());
+        Category savedCategory = categoryRepository.save(category);
+        return CategoryResponseDto.from(savedCategory);
     }
 
     //모든 카테고리 조회
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryResponseDto> getAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream()
+                .map(CategoryResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     //상품 조회(카테고리별)
-    public List<Item> getItemsByCategory(Long categoryId){
+    public List<ItemResponseDto> getItemsByCategory(Long categoryId){
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
-        return itemRepository.findByCategories(category);
+        List<Item> items = category.getItems();
+        return items.stream()
+                .map(ItemResponseDto::from)
+                .collect(Collectors.toList());
     }
 }
+

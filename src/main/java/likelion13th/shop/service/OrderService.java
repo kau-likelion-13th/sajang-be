@@ -76,7 +76,6 @@ public class OrderService {
                 .map(OrderResponseDto::from)
                 .collect(Collectors.toList()); // DTO 변환
     }
-
     //삭제가 아니라 주문 상태만 변경
     //배송 완료된 상품, 주문 취소된 상품은 주문 취소 불가능
     public OrderResponseDto cancelOrder(Long orderId) {
@@ -93,7 +92,6 @@ public class OrderService {
         user.addMileage(order.getTotalPrice() - order.getFinalPrice());
         //결제 시에 적립되었던 마일리지 차감 ( 결제 금액의 10%)
         user.useMileage((int)(order.getFinalPrice()*0.1));
-        user.minusRecentTotal(order.getFinalPrice());
         //@Transactional에 의해 자동 저장
 
         return OrderResponseDto.from(order);

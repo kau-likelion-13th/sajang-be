@@ -8,6 +8,5 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CategoryCreateRequest {
-    private String id;
     private String name;
 }
