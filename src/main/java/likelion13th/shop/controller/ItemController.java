@@ -3,7 +3,6 @@ package likelion13th.shop.controller;
 import likelion13th.shop.DTO.ItemCreateRequest;
 import likelion13th.shop.DTO.ItemResponseDto;
 import likelion13th.shop.DTO.ItemUpdateRequest;
-import likelion13th.shop.domain.Item;
 import likelion13th.shop.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,10 +25,10 @@ public class ItemController {
 
     //상품 수정
     @PatchMapping("/{itemId}")
-    public ResponseEntity<Item> updateItem(
+    public ResponseEntity<ItemResponseDto> updateItem(
             @PathVariable Long itemId,
             @RequestBody ItemUpdateRequest request){
-        Item updatedItem = itemService.updateItem(itemId, request);
+        ItemResponseDto updatedItem = itemService.updateItem(itemId, request);
         return ResponseEntity.ok(updatedItem);
     }
 
@@ -43,8 +42,8 @@ public class ItemController {
     //상품 조회
     //개별 상품 조회
     @GetMapping("/{itemId}")
-    public ResponseEntity<Item> getItemById(@PathVariable Long itemId) {
-        Item item = itemService.getItemById(itemId);
+    public ResponseEntity<ItemResponseDto> getItemById(@PathVariable Long itemId) {
+        ItemResponseDto item = itemService.getItemById(itemId);
         return ResponseEntity.ok(item);
     }
 

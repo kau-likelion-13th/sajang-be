@@ -1,5 +1,6 @@
 package likelion13th.shop.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import likelion13th.shop.DTO.OrderCreateRequest;
 import likelion13th.shop.DTO.OrderResponseDto;
@@ -11,9 +12,12 @@ import likelion13th.shop.repository.ItemRepository;
 import likelion13th.shop.repository.OrderRepository;
 import likelion13th.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,22 +54,32 @@ public class OrderService {
         //주문 생성과 동시에 배송 중으로 설정
         Order order = new Order(user, item, request.getQuantity(), finalPrice);
         order.setStatus(OrderStatus.PROCESSING);
+        //
+        user.updateRecentTotal(finalPrice);
         //주문 저장
         orderRepository.save(order);
         return OrderResponseDto.from(order);
     }
 
-    public Order getOrderById(Long orderId) {
-        return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+    //개별 주문 조회
+    @Transactional
+    public OrderResponseDto getOrderById(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 주문을 찾을 수 없습니다."));
+        return OrderResponseDto.from(order);
     }
 
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    @Transactional
+    public List<OrderResponseDto> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream()
+                .map(OrderResponseDto::from)
+                .collect(Collectors.toList()); // DTO 변환
     }
 
     //삭제가 아니라 주문 상태만 변경
     //배송 완료된 상품, 주문 취소된 상품은 주문 취소 불가능
-    public Order cancelOrder(Long orderId) {
+    public OrderResponseDto cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
 
@@ -74,13 +88,30 @@ public class OrderService {
         }
         //주문 상태 변경
         order.setStatus(OrderStatus.CANCEL);
-        //마일리지 환불 및 주문에 대한 마일리지 차감
+        //마일리지 환불
         User user = order.getUser();
         user.addMileage(order.getTotalPrice() - order.getFinalPrice());
+        //결제 시에 적립되었던 마일리지 차감 ( 결제 금액의 10%)
         user.useMileage((int)(order.getFinalPrice()*0.1));
-        //변경 사항 저장
-        orderRepository.save(order);
-        return order;
+        user.minusRecentTotal(order.getFinalPrice());
+        //@Transactional에 의해 자동 저장
+
+        return OrderResponseDto.from(order);
+    }
+
+    @Scheduled(fixedRate = 60000) // 60초마다 실행
+    @Transactional
+    public void updateOrderStatus() {
+        // PROCESSING 상태면서 1분 이전에 생성된 주문 찾는 메서드
+        List<Order> orders = orderRepository.findByStatusAndCreatedDateBefore(
+                OrderStatus.PROCESSING,
+                LocalDateTime.now().minusMinutes(1)
+        );
+
+        // 주문 상태를 'COMPLETE' 로 변경
+        for (Order order : orders) {
+            order.setStatus(OrderStatus.COMPLETE);
+        }
     }
 
 }

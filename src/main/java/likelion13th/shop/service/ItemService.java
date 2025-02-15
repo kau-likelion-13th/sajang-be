@@ -1,5 +1,6 @@
 package likelion13th.shop.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import likelion13th.shop.DTO.ItemCreateRequest;
 import likelion13th.shop.DTO.ItemResponseDto;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,22 +45,30 @@ public class ItemService {
     }
 
     //개별 상품 조회
-    public Item getItemById(Long itemId) {
-        return itemRepository.findById(itemId).orElseThrow(() -> new RuntimeException("Item not found"));
+    @Transactional
+    public ItemResponseDto getItemById(Long itemId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 상품을 찾을 수 없습니다."));
+
+        return ItemResponseDto.from(item);
     }
 
     //모든 상품 조회
-    public List<Item> getAllItems(){
-        return itemRepository.findAll();
+    @Transactional
+    public List<ItemResponseDto> getAllItems(){
+        List<Item> items = itemRepository.findAll();
+        return items.stream()
+                .map(ItemResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     //상품 수정 - 이름과 가격
     @Transactional
     //jPA에서는 얘 있으면 save()호출하지 않아도 자동으로 업데이트
-    public Item updateItem(Long itemId, ItemUpdateRequest request){
+    public ItemResponseDto updateItem(Long itemId, ItemUpdateRequest request){
         //상품 조회 (존재하지 않으면 예외 발생)
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 상품을 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("해당 상품을 찾을 수 없습니다."));
 
         //필드 수정 (null 값이 아닌 경우만 업데이트)
         if (request.getName() != null) {
@@ -67,7 +77,8 @@ public class ItemService {
         if (request.getPrice() != null) {
             item.setPrice(request.getPrice());
         }
-        return item;
+
+        return ItemResponseDto.from(item);
     }
 
     // 상품 삭제

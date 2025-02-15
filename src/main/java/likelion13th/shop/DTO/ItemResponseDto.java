@@ -1,9 +1,11 @@
 package likelion13th.shop.DTO;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Item;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL) // null 필드는 제외
 public class ItemResponseDto {
     private Long id;
     private String name;

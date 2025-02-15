@@ -62,6 +62,11 @@ public class Order extends BaseEntity {
         item.getOrders().add(this);
     }
 
+    // 주문 상태 업데이트
+    public void updateStatus(OrderStatus status) {
+        this.status = status;
+    }
+
     //마일리지 적용 후 가격에 대한 로직
     private int calculateFinalPrice(int mileageToUse) {
         // 사용 가능한 최대 마일리지

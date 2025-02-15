@@ -1,11 +1,14 @@
 package likelion13th.shop.repository;
 
-import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Order;
+import likelion13th.shop.domain.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long>{
-
+    List<Order> findByStatusAndCreatedDateBefore(OrderStatus status, LocalDateTime dateTime);
 }

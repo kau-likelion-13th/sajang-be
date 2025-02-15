@@ -2,7 +2,6 @@ package likelion13th.shop.controller;
 
 import likelion13th.shop.DTO.OrderCreateRequest;
 import likelion13th.shop.DTO.OrderResponseDto;
-import likelion13th.shop.domain.Order;
 import likelion13th.shop.repository.OrderRepository;
 import likelion13th.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -45,26 +44,30 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
     }
 
-    //2. 특정 주문 조회
+    //개별 주문 조회
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
-        Order order = orderService.getOrderById(orderId);
+    public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable Long orderId) {
+        OrderResponseDto order = orderService.getOrderById(orderId);
         return ResponseEntity.ok(order);
     }
 
 
-    //3. 모든 주문 목록 조회
+    //모든 주문 목록 조회
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> orders = orderService.getAllOrders();
+    public ResponseEntity<List<OrderResponseDto>> getAllOrders() {
+        List<OrderResponseDto> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
 
-    //4. 주문 취소
+    //주문 취소
     @PutMapping("/{orderId}/cancel")
-    public ResponseEntity<Order> cancelOrder(@PathVariable Long orderId) {
-        Order canceledOrder = orderService.cancelOrder(orderId);
-        return ResponseEntity.ok(canceledOrder);
+    public ResponseEntity<String> cancelOrder(@PathVariable Long orderId) {
+        try {
+            orderService.cancelOrder(orderId);
+            return ResponseEntity.ok("주문이 성공적으로 취소되었습니다.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
 }
