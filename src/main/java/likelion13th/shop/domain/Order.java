@@ -2,12 +2,11 @@ package likelion13th.shop.domain;
 
 import jakarta.persistence.*;
 import likelion13th.shop.domain.entity.BaseEntity;
+import likelion13th.shop.global.constant.OrderStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter

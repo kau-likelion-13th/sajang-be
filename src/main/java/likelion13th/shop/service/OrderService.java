@@ -6,7 +6,7 @@ import likelion13th.shop.DTO.OrderCreateRequest;
 import likelion13th.shop.DTO.OrderResponseDto;
 import likelion13th.shop.domain.Item;
 import likelion13th.shop.domain.Order;
-import likelion13th.shop.domain.OrderStatus;
+import likelion13th.shop.global.constant.OrderStatus;
 import likelion13th.shop.domain.User;
 import likelion13th.shop.repository.ItemRepository;
 import likelion13th.shop.repository.OrderRepository;
