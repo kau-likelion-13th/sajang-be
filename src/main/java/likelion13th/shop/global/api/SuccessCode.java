@@ -17,6 +17,7 @@ public enum SuccessCode implements BaseCode { // 성공
     USER_REISSUE_SUCCESS(HttpStatus.OK, "USER_200", "토큰 재발급이 완료되었습니다."),
     USER_DELETE_SUCCESS(HttpStatus.OK, "USER_200", "회원탈퇴가 완료되었습니다."),
 
+
     // Category
     CATEGORY_CREATE_SUCCESS(HttpStatus.CREATED,"CATEGORY_201", "카테고리가 성공적으로 생성되었습니다."),
     CATEGORY_GET_SUCCESS(HttpStatus.OK, "CATEGORY_2001", "카테고리 목록 조회에 성공했습니다."),

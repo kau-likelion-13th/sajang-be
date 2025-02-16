@@ -2,12 +2,17 @@ package likelion13th.shop.controller;
 
 import likelion13th.shop.DTO.request.OrderCreateRequest;
 import likelion13th.shop.DTO.response.OrderResponseDto;
+import likelion13th.shop.domain.Order;
+import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.global.api.SuccessCode;
 import likelion13th.shop.repository.OrderRepository;
+import likelion13th.shop.repository.UserRepository;
 import likelion13th.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,30 +21,36 @@ import java.util.List;
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
-    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
     private final OrderService orderService;
 
     //1. 주문 생성
-    /* 카카오 연결 후 사용
     @PostMapping
-    public ResponseEntity<Order> createOrder(
-            @AuthenticationPrincipal OAuth2User oAuth2User
+    public ApiResponse<?> createOrder(
+            @AuthenticationPrincipal OAuth2User oAuth2User,
             @RequestBody OrderCreateRequest request) {
 
-        // ✅ 카카오 로그인한 유저의 고유 ID 가져오기
+        // 카카오 로그인한 유저의 고유 ID 가져오기
         String kakaoId = oAuth2User.getAttribute("id").toString();
 
-        // ✅ 카카오 ID를 통해 유저 정보 조회
+        // 카카오 ID를 통해 유저 정보 조회
         User user = userRepository.findByKakaoId(kakaoId)
                 .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 사용자입니다."));
 
-        request.setUserId(user.getId()); // ✅ 유저 ID를 Order 요청에 설정
+        // 요청에 유저 ID 추가
+        request.setUserId(user.getId());
 
-        Order newOrder = orderService.createOrder(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
-    }*/
+        try {
+            OrderResponseDto newOrder = orderService.createOrder(request);
+            return ApiResponse.onSuccess(SuccessCode.ORDER_CREATE_SUCCESS, newOrder);
+        } catch (IllegalArgumentException e) {
+            return ApiResponse.onFailure(ErrorCode.USER_NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            return ApiResponse.onFailure(ErrorCode.INTERNAL_SERVER_ERROR, "주문 생성 중 오류가 발생했습니다.");
+        }
+    }
 
-    @PostMapping
+    /*@PostMapping
     public ApiResponse<?> createOrder(@RequestBody OrderCreateRequest request) {
         OrderResponseDto newOrder = orderService.createOrder(request);
         if (newOrder == null) {
@@ -51,8 +62,7 @@ public class OrderController {
         return ApiResponse.onSuccess(
                 SuccessCode.ORDER_CREATE_SUCCESS,
                 newOrder
-        );
-    }
+        );*/
 
     //개별 주문 조회
     @GetMapping("/{orderId}")
@@ -103,4 +113,5 @@ public class OrderController {
         );
     }
 }
+
 

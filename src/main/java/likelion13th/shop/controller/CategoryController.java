@@ -25,16 +25,6 @@ public class CategoryController {
         return  ApiResponse.onSuccess(SuccessCode.CATEGORY_CREATE_SUCCESS, newCategory);
     }
 
-    //카테고리 전체 조회
-    @GetMapping
-    public ApiResponse<?> getAllCategories() {
-        List<CategoryResponseDto> categories = categoryService.getAllCategories();
-        if (categories.isEmpty()) {
-            return ApiResponse.onFailure(ErrorCode.CATEGORY_NOT_FOUND, "조회된 카테고리가 없습니다.");
-        }
-        return ApiResponse.onSuccess(SuccessCode.CATEGORY_GET_SUCCESS, categories);
-    }
-
     //특정 카테고리에 속한 상품 목록 조회
     @GetMapping("/{categoryId}/items")
     public ApiResponse<?> getItemsByCategory(@PathVariable Long categoryId) {

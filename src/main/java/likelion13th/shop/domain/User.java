@@ -69,7 +69,7 @@ public class User extends BaseEntity {
 
     // 마일리지 사용
     public void useMileage(int mileage) {
-        if (mileage <= 0) {
+        if (mileage < 0) {
             throw new IllegalArgumentException("사용할 마일리지는 0보다 커야 합니다.");
         }
         if (this.mileage < mileage) {
