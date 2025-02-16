@@ -7,12 +7,14 @@ import likelion13th.shop.DTO.ItemResponseDto;
 import likelion13th.shop.DTO.ItemUpdateRequest;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Item;
+import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.repository.CategoryRepository;
 import likelion13th.shop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,7 +57,7 @@ public class ItemService {
 
     //모든 상품 조회
     @Transactional
-    public List<ItemResponseDto> getAllItems(){
+    public List<ItemResponseDto> getAllItems() {
         List<Item> items = itemRepository.findAll();
         return items.stream()
                 .map(ItemResponseDto::from)
@@ -65,7 +67,7 @@ public class ItemService {
     //상품 수정 - 이름과 가격
     @Transactional
     //jPA에서는 얘 있으면 save()호출하지 않아도 자동으로 업데이트
-    public ItemResponseDto updateItem(Long itemId, ItemUpdateRequest request){
+    public ItemResponseDto updateItem(Long itemId, ItemUpdateRequest request) {
         //상품 조회 (존재하지 않으면 예외 발생)
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 상품을 찾을 수 없습니다."));
@@ -83,15 +85,24 @@ public class ItemService {
 
     // 상품 삭제
     @Transactional
-    public void deleteItem(Long itemId){
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(()-> new IllegalArgumentException("Item not found"));
+    public boolean deleteItem(Long itemId) {
+        Optional<Item> itemOptional = itemRepository.findById(itemId);
 
-        for (Category category : item.getCategories()) {
-            category.getItems().remove(item);
+        if (itemOptional.isEmpty()) {
+            return false; // 상품 없음
         }
-        item.getCategories().clear();
 
-        itemRepository.delete(item);
+        try {
+            Item item = itemOptional.get();
+            // ✅ 중간 테이블 관계 제거
+            item.getCategories().clear();
+            itemRepository.save(item);
+
+            // ✅ Item 삭제
+            itemRepository.delete(item);
+            return true; // 삭제 성공
+        } catch (Exception e) {
+            return false; // 삭제 실패
+        }
     }
 }

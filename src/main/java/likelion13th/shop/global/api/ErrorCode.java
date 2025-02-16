@@ -26,8 +26,13 @@ public enum ErrorCode implements BaseCode { // 실패
 
     // Category
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY_4041", "해당 카테고리를 찾을 수 없습니다."),
-    CATEGORY_ITEMS_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY_4042", "해당 카테고리에 상품이 없습니다.");
+    CATEGORY_ITEMS_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY_4042", "해당 카테고리에 상품이 없습니다."),
 
+    // Item
+    ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "ITEM_4041", "해당 상품을 찾을 수 없습니다."),
+    ITEM_CREATE_FAILED(HttpStatus.BAD_REQUEST, "ITEM_4001", "상품 등록 요청이 잘못되었습니다."),
+
+    ITEM_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "ITEM_5001", "상품 삭제에 실패했습니다."),
     ;
 
     private final HttpStatus httpStatus;

@@ -17,12 +17,19 @@ public enum SuccessCode implements BaseCode { // 성공
     USER_REISSUE_SUCCESS(HttpStatus.OK, "USER_200", "토큰 재발급이 완료되었습니다."),
     USER_DELETE_SUCCESS(HttpStatus.OK, "USER_200", "회원탈퇴가 완료되었습니다."),
 
-
     // Category
     CATEGORY_CREATE_SUCCESS(HttpStatus.CREATED,"CATEGORY_201", "카테고리가 성공적으로 생성되었습니다."),
     CATEGORY_GET_SUCCESS(HttpStatus.OK, "CATEGORY_2001", "카테고리 목록 조회에 성공했습니다."),
-    CATEGORY_ITEMS_GET_SUCCESS(HttpStatus.OK, "CATEGORY_2002", "카테고리 상품 목록 조회에 성공했습니다.");
+    CATEGORY_ITEMS_GET_SUCCESS(HttpStatus.OK, "CATEGORY_2002", "카테고리 상품 목록 조회에 성공했습니다."),
+
+    // Item
+    ITEM_CREATE_SUCCESS(HttpStatus.CREATED, "ITEM_201", "상품이 성공적으로 등록되었습니다."),
+    ITEM_GET_SUCCESS(HttpStatus.OK, "ITEM_2003", "상품 조회에 성공했습니다."),
+
+    ITEM_UPDATE_SUCCESS(HttpStatus.OK, "ITEM_2001", "상품이 성공적으로 수정되었습니다."),
+    ITEM_DELETE_SUCCESS(HttpStatus.OK, "ITEM_2002", "상품이 성공적으로 삭제되었습니다."),
     ;
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
