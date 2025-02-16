@@ -1,4 +1,4 @@
-package likelion13th.shop.DTO;
+package likelion13th.shop.DTO.request;
 
 
 import lombok.Getter;

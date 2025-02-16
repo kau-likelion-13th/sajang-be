@@ -2,8 +2,8 @@ package likelion13th.shop.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import likelion13th.shop.DTO.OrderCreateRequest;
-import likelion13th.shop.DTO.OrderResponseDto;
+import likelion13th.shop.DTO.request.OrderCreateRequest;
+import likelion13th.shop.DTO.response.OrderResponseDto;
 import likelion13th.shop.domain.Item;
 import likelion13th.shop.domain.Order;
 import likelion13th.shop.global.constant.OrderStatus;

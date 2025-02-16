@@ -1,9 +1,9 @@
 package likelion13th.shop.service;
 
 import jakarta.transaction.Transactional;
-import likelion13th.shop.DTO.CategoryCreateRequest;
-import likelion13th.shop.DTO.CategoryResponseDto;
-import likelion13th.shop.DTO.ItemResponseDto;
+import likelion13th.shop.DTO.request.CategoryCreateRequest;
+import likelion13th.shop.DTO.response.CategoryResponseDto;
+import likelion13th.shop.DTO.response.ItemResponseDto;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Item;
 import likelion13th.shop.repository.CategoryRepository;

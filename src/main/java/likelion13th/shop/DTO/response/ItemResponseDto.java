@@ -1,4 +1,4 @@
-package likelion13th.shop.DTO;
+package likelion13th.shop.DTO.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import likelion13th.shop.domain.Category;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor

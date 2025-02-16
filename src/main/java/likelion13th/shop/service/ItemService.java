@@ -2,12 +2,11 @@ package likelion13th.shop.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import likelion13th.shop.DTO.ItemCreateRequest;
-import likelion13th.shop.DTO.ItemResponseDto;
-import likelion13th.shop.DTO.ItemUpdateRequest;
+import likelion13th.shop.DTO.request.ItemCreateRequest;
+import likelion13th.shop.DTO.response.ItemResponseDto;
+import likelion13th.shop.DTO.request.ItemUpdateRequest;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Item;
-import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.repository.CategoryRepository;
 import likelion13th.shop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package likelion13th.shop.DTO;
+package likelion13th.shop.DTO.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ItemUpdateRequest {
+public class CategoryCreateRequest {
     private String name;
-    private Integer price;
 }

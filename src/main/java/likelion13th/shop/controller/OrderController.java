@@ -1,15 +1,13 @@
 package likelion13th.shop.controller;
 
-import likelion13th.shop.DTO.OrderCreateRequest;
-import likelion13th.shop.DTO.OrderResponseDto;
+import likelion13th.shop.DTO.request.OrderCreateRequest;
+import likelion13th.shop.DTO.response.OrderResponseDto;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.global.api.SuccessCode;
 import likelion13th.shop.repository.OrderRepository;
 import likelion13th.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
