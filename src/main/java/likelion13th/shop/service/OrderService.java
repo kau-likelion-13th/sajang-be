@@ -101,7 +101,7 @@ public class OrderService {
     @Transactional
     public void updateOrderStatus() {
         // PROCESSING 상태면서 1분 이전에 생성된 주문 찾는 메서드
-        List<Order> orders = orderRepository.findByStatusAndCreatedDateBefore(
+        List<Order> orders = orderRepository.findByStatusAndCreatedAtBefore(
                 OrderStatus.PROCESSING,
                 LocalDateTime.now().minusMinutes(1)
         );

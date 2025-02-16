@@ -17,38 +17,50 @@ repositories {
 	mavenCentral()
 }
 
-// 의존성 설정
 dependencies {
-	// Spring Boot Starters
+	// ✅ Spring Boot Data JPA: 3.4.2로 고정 (호환성 유지)
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.4.2'
+
+	// ✅ ANTLR 버전 명시 (4.13.0)
+	implementation 'org.antlr:antlr4-runtime:4.13.0'
+	runtimeOnly 'org.antlr:antlr4-runtime:4.13.0'
+
+	// ✅ ANTLR 충돌 방지 (기존 버전 강제)
+	configurations.all {
+		resolutionStrategy.eachDependency { details ->
+			if (details.requested.group == 'org.antlr') {
+				details.useVersion '4.13.0'
+			}
+		}
+	}
+
+	// ✅ 기존 의존성들
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //@Entity하면서 추가함
+	implementation 'org.springframework.security:spring-security-config'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-	// security
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// ✅ JWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-	// oauth2
-//	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // OAuth2 클라이언트 구현 (카카오, 구글 로그인 등 소셜 로그인 지원)
-
-	// JWT
-//	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-//	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-//	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-
-	// Database and Hibernate
+	// ✅ Database and Hibernate
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'org.hibernate.orm:hibernate-core:6.2.7.Final'
 
-	// Lombok
+	// ✅ Lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	// Testing
+	// ✅ Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.springframework.security:spring-security-test'
 
-	// OpenAPI/Swagger
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+	// ✅ Swagger (SpringDoc OpenAPI 3)
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 }
 
 test {

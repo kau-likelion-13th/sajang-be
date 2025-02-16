@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long>{
-    List<Order> findByStatusAndCreatedDateBefore(OrderStatus status, LocalDateTime dateTime);
+    List<Order> findByStatusAndCreatedAtBefore(OrderStatus status, LocalDateTime dateTime);
 }
