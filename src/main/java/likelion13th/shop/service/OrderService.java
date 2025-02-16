@@ -27,35 +27,44 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
+    //마일리지 적용 후 가격에 대한 로직
+    private int calculateFinalPrice(int totalPrice, int mileageToUse) {
+        // 사용 가능한 최대 마일리지
+        int availableMileage = Math.min(mileageToUse, totalPrice);
+        // 최종 결제 금액
+        int finalPrice = totalPrice -  availableMileage;
+        return Math.max(finalPrice, 0);  // 최소 결제 금액 0원 보장
+    }
+
     @Transactional
     public OrderResponseDto createOrder(OrderCreateRequest request) {
-        //이미 `userId`가 컨트롤러에서 설정됨 → 여기서 별도로 조회할 필요 없음
-
+        // 사용자 조회
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-
+        // 상품 조회
         Item item = itemRepository.findById(request.getItemId())
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
 
-        //총 주문 금액 계산
+        // 총 주문 금액 계산
         int totalPrice = item.getPrice() * request.getQuantity();
-        //마일리지 사용 로직
+        // 마일리지 유효성 검사
         int mileageToUse = request.getMileageToUse();
         if (mileageToUse > user.getMileage()) {
             throw new IllegalArgumentException("보유한 마일리지를 초과하여 사용할 수 없습니다.");
         }
 
-        int finalPrice = totalPrice - mileageToUse; // 최종 결제 금액
-        if (finalPrice < 0) {
-            finalPrice = 0; // 마일리지가 초과 사용되지 않도록 방지
-        }
+        // 최종 금액 계선
+        int finalPrice = calculateFinalPrice(totalPrice, mileageToUse); // 최종 결제 금액
 
+        //주문 생성과 동시에 배송 중으로 설정
+        Order order = new Order(user, item, request.getQuantity());
+        order.setTotalPrice(totalPrice);
+        order.setFinalPrice(finalPrice);
+        order.setStatus(OrderStatus.PROCESSING);
+        //사용자 마일리지 처리
         user.useMileage(mileageToUse);
         user.addMileage((int)(finalPrice*0.1));//결제 금액의 10% 마일리지 적립
-        //주문 생성과 동시에 배송 중으로 설정
-        Order order = new Order(user, item, request.getQuantity(), finalPrice);
-        order.setStatus(OrderStatus.PROCESSING);
-        //
+        //최근 결제 금액 업데이트
         user.updateRecentTotal(finalPrice);
         //주문 저장
         orderRepository.save(order);

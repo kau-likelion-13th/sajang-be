@@ -24,9 +24,11 @@ public class Order extends BaseEntity {
     private int quantity;
 
     @Column(nullable = false)
+    @Setter
     private int totalPrice; //기존 주문 내역을 유지하기 위해
 
     @Column(nullable = false)
+    @Setter
     private int finalPrice;
 
     @Setter
@@ -43,12 +45,9 @@ public class Order extends BaseEntity {
     private User user;
 
     //생성자 -> 객체 생성될 때 자동으로 실행! 즉 초기 설정을 할 때 사용
-    public Order(User user, Item item, int quantity, int mileageToUse) {
+    public Order(User user, Item item, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("주문 수량은 1개 이상이어야 합니다.");
-        }
-        if (mileageToUse < 0) {
-            throw new IllegalArgumentException("마일리지는 음수가 될 수 없습니다.");
         }
 
         this.user = user;
@@ -56,7 +55,6 @@ public class Order extends BaseEntity {
         this.quantity = quantity;
         this.status = OrderStatus.PROCESSING;
         this.totalPrice = item.getPrice() * quantity;
-        this.finalPrice = calculateFinalPrice(mileageToUse);
 
         // 연관관계 편의 메서드 호출
         user.getOrders().add(this);
@@ -68,14 +66,6 @@ public class Order extends BaseEntity {
         this.status = status;
     }
 
-    //마일리지 적용 후 가격에 대한 로직
-    private int calculateFinalPrice(int mileageToUse) {
-        // 사용 가능한 최대 마일리지
-        int availableMileage = Math.min(mileageToUse, totalPrice);
-        //최종 결제 금액
-        int finalPrice = totalPrice -  availableMileage;
-        return Math.max(finalPrice, 0);  // 최소 결제 금액 0원 보장
-    }
 
     //양방향 편의 메서드
     public void setUser(User user) {
