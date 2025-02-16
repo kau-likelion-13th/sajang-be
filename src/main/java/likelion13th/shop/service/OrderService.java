@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,12 +79,16 @@ public class OrderService {
     }
     //삭제가 아니라 주문 상태만 변경
     //배송 완료된 상품, 주문 취소된 상품은 주문 취소 불가능
-    public OrderResponseDto cancelOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
+    public boolean cancelOrder(Long orderId) {
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
 
+        if (orderOptional.isEmpty()) {
+            return false; // 주문 없음
+        }
+
+        Order order = orderOptional.get();
         if (order.getStatus() == OrderStatus.COMPLETE || order.getStatus() == OrderStatus.CANCEL) {
-            throw new IllegalStateException("배송 완료된 주문 또는 이미 취소된 주문은 취소할 수 없습니다.");
+            return false;
         }
         //주문 상태 변경
         order.setStatus(OrderStatus.CANCEL);
@@ -94,7 +99,8 @@ public class OrderService {
         user.useMileage((int)(order.getFinalPrice()*0.1));
         //@Transactional에 의해 자동 저장
 
-        return OrderResponseDto.from(order);
+        //return OrderResponseDto.from(order);
+        return true;
     }
 
     @Scheduled(fixedRate = 60000) // 60초마다 실행

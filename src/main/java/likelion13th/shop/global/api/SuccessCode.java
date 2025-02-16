@@ -28,7 +28,13 @@ public enum SuccessCode implements BaseCode { // 성공
 
     ITEM_UPDATE_SUCCESS(HttpStatus.OK, "ITEM_2001", "상품이 성공적으로 수정되었습니다."),
     ITEM_DELETE_SUCCESS(HttpStatus.OK, "ITEM_2002", "상품이 성공적으로 삭제되었습니다."),
-    ;
+
+    // Order
+    ORDER_CREATE_SUCCESS(HttpStatus.CREATED, "ORDER_201", "주문이 성공적으로 생성되었습니다."),
+    ORDER_GET_SUCCESS(HttpStatus.OK, "ORDER_2001", "주문 조회에 성공했습니다."),
+    ORDER_LIST_SUCCESS(HttpStatus.OK, "ORDER_2002", "모든 주문 목록 조회에 성공했습니다."),
+    ORDER_CANCEL_SUCCESS(HttpStatus.OK, "ORDER_2003", "주문이 성공적으로 취소되었습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;

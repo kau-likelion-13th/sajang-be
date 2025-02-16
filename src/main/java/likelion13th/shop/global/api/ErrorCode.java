@@ -33,7 +33,12 @@ public enum ErrorCode implements BaseCode { // 실패
     ITEM_CREATE_FAILED(HttpStatus.BAD_REQUEST, "ITEM_4001", "상품 등록 요청이 잘못되었습니다."),
 
     ITEM_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "ITEM_5001", "상품 삭제에 실패했습니다."),
-    ;
+
+    // Order
+    ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "ORDER_4041", "해당 주문을 찾을 수 없습니다."),
+    ORDER_CANCEL_FAILED(HttpStatus.BAD_REQUEST, "ORDER_4001", "주문 취소에 실패했습니다."),
+    ORDER_CREATE_FAILED(HttpStatus.BAD_REQUEST, "ORDER_4002", "주문 생성 요청이 잘못되었습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;
