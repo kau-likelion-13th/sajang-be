@@ -1,0 +1,51 @@
+package likelion13th.shop.S3;
+
+import io.swagger.v3.oas.annotations.Operation;
+import likelion13th.shop.global.api.ApiResponse;
+import likelion13th.shop.global.api.ErrorCode;
+import likelion13th.shop.global.api.SuccessCode;
+import likelion13th.shop.global.exception.GeneralException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
+
+@RestController  // REST API 컨트롤러
+@RequiredArgsConstructor  // final 필드 자동 주입
+@RequestMapping("/api/s3")
+public class S3Controller {
+
+    private final S3Service s3Service;  // S3 업로드 서비스 주입
+
+    /**
+     * S3 파일 업로드 API
+     * @param file Multipart 파일
+     * @return 업로드된 파일 URL
+     */
+    @PostMapping("/upload")
+    @Operation(summary = "url 생성", description = "S3 URL이 생성됩니다.")
+    public ApiResponse<Optional<String>> uploadFile(@RequestParam("file") MultipartFile file) {
+        // 1. 파일 유효성 검사
+        if (file.isEmpty()) {
+            throw new GeneralException(ErrorCode.S3_FILE_EMPTY);
+        }
+
+        // 2. 파일 형식 검사 (예: 이미지만 허용)
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new GeneralException(ErrorCode.S3_INVALID_FILE_TYPE);
+        }
+
+        // 3. S3 업로드
+        Optional<String> fileUrl = Optional.ofNullable(s3Service.uploadFile(file));
+
+        // 4. 결과 반환 (주문 API 스타일)
+        return ApiResponse.onSuccess(SuccessCode.S3_UPLOAD_SUCCESS, fileUrl);
+    }
+}

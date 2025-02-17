@@ -34,8 +34,13 @@ public enum ErrorCode implements BaseCode { // 실패
     // Order
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "ORDER_4041", "해당 주문을 찾을 수 없습니다."),
     ORDER_CANCEL_FAILED(HttpStatus.BAD_REQUEST, "ORDER_4001", "주문 취소에 실패했습니다."),
-    ORDER_CREATE_FAILED(HttpStatus.BAD_REQUEST, "ORDER_4002", "주문 생성 요청이 잘못되었습니다.");
+    ORDER_CREATE_FAILED(HttpStatus.BAD_REQUEST, "ORDER_4002", "주문 생성 요청이 잘못되었습니다."),
 
+    // S3
+    S3_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3_500", "S3 업로드에 실패하였습니다."),
+    S3_FILE_EMPTY(HttpStatus.BAD_REQUEST, "S3_400", "업로드할 파일이 비어 있습니다."),
+    S3_INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST, "S3_401", "유효하지 않은 파일 형식입니다."),
+    ;
 
     private final HttpStatus httpStatus;
     private final String code;
