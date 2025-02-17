@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class OrderCreateRequest {
+    private Long userId;
     private Long itemId;
     private int quantity;
     private int mileageToUse;

@@ -37,9 +37,9 @@ public class OrderService {
     }
 
     @Transactional
-    public Optional<OrderResponseDto> createOrder(OrderCreateRequest request, Long userId) {
+    public Optional<OrderResponseDto> createOrder(OrderCreateRequest request) {
         // 사용자 조회
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> userOptional = userRepository.findById(request.getUserId());
         if (userOptional.isEmpty()) {
             return Optional.empty(); // 사용자 없음
         }

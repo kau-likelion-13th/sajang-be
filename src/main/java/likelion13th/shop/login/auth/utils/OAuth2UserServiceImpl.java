@@ -62,15 +62,14 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 
             // ✅ 3️⃣ OAuth2User 반환 (provider_id 포함)
             Map<String, Object> extendedAttributes = new HashMap<>(attributes);
-            //extendedAttributes.put("provider_id", providerId); // ✅ provider_id 포함
-            extendedAttributes.put("id", providerId);
+            extendedAttributes.put("provider_id", providerId); // ✅ provider_id 포함
 
             return new DefaultOAuth2User(
                     Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
                     extendedAttributes,
-                    //"provider_id" // ✅ "provider_id"를 key로 설정
-                    "id"
+                    "provider_id" // ✅ "provider_id"를 key로 설정
             );
+
         } catch (Exception e) {
             log.error("// ❌ 카카오 OAuth2 처리 중 오류 발생: {}", e.getMessage());
             throw new RuntimeException(ErrorCode.USER_NOT_FOUND.getMessage());

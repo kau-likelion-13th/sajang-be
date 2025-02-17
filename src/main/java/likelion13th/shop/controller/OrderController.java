@@ -1,5 +1,6 @@
 package likelion13th.shop.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import likelion13th.shop.DTO.request.OrderCreateRequest;
 import likelion13th.shop.DTO.response.OrderResponseDto;
 import likelion13th.shop.domain.Order;
@@ -7,6 +8,8 @@ import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.global.api.SuccessCode;
+import likelion13th.shop.login.auth.jwt.CustomUserDetails;
+import likelion13th.shop.login.service.UserService;
 import likelion13th.shop.repository.OrderRepository;
 import likelion13th.shop.repository.UserRepository;
 import likelion13th.shop.service.OrderService;
@@ -24,53 +27,31 @@ import java.util.Optional;
 public class OrderController {
     private final UserRepository userRepository;
     private final OrderService orderService;
+    private final UserService userService;
 
     // 주문 생성
     @PostMapping
+    @Operation(summary = "주문 생성", description = "로그인한 사용자의 주문을 생성합니다.")
     public ApiResponse<?> createOrder(
-            @AuthenticationPrincipal OAuth2User oAuth2User,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody OrderCreateRequest request) {
 
-        // 카카오 로그인한 유저의 providerId (카카오 고유 ID) 가져오기
-        if (oAuth2User == null || oAuth2User.getAttribute("id") == null) {
-            return ApiResponse.onFailure(
-                    ErrorCode.USER_NOT_AUTHENTICATED,
-                    "카카오 로그인 정보가 없습니다."
-            );
-        }
+        // ✅ 1. 인증된 유저 정보 가져오기
+        String providerId = customUserDetails.getProviderId();
 
-        String providerId = oAuth2User.getAttribute("id").toString();
-        //kakaoId -> providerId 함
+        // ✅ 2. providerId 기반으로 유저 조회
+        User user = userService.findByProviderId(providerId);
 
-        // 카카오 ID를 통해 유저 정보 조회
-        Optional<User> userOptional = userRepository.findByProviderId(providerId);
-        if (userOptional.isEmpty()) {
-            return ApiResponse.onFailure(
-                    ErrorCode.USER_NOT_FOUND,
-                    "등록되지 않은 사용자입니다."
-            );
-        }
+        // ✅ 3. 요청 객체에 User 정보 추가
+        request.setUserId(user.getId());
 
-        // 요청에 유저 ID 추가
-        User user = userOptional.get();
+        // ✅ 4. 주문 생성
+        Optional<OrderResponseDto> newOrder = orderService.createOrder(request);
 
-        // 주문 생성 시도
-        Optional<OrderResponseDto> newOrder = orderService.createOrder(request, user.getId());
-
-        // 실패 상황에 따른 통일된 응답 처리
-        if (newOrder.isEmpty()) {
-            return ApiResponse.onFailure(
-                    ErrorCode.ORDER_CREATE_FAILED,
-                    "주문 생성에 실패했습니다. (사용자, 상품, 마일리지 문제일 수 있습니다.)"
-            );
-        }
-
-        // 성공 시 `onSuccess` 반환
-        return ApiResponse.onSuccess(
-                SuccessCode.ORDER_CREATE_SUCCESS,
-                newOrder.get()
-        );
+        // ✅ 5. 성공 응답 반환
+        return ApiResponse.onSuccess(SuccessCode.ORDER_CREATE_SUCCESS, newOrder);
     }
+
 
     //개별 주문 조회
     @GetMapping("/{orderId}")
