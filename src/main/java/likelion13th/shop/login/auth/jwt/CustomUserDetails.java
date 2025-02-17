@@ -24,6 +24,8 @@ public class CustomUserDetails implements UserDetails {
     private Long userId;          // 유저 ID (PK)
     private String providerId;
     private String usernickname;  // 카카오 닉네임
+    private Collection<? extends GrantedAuthority> authorities;
+
 
     /**
      * ✅ User 엔티티 → CustomUserDetails 변환
@@ -88,4 +90,20 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true; // 계정 활성화 여부 (항상 true)
     }
+
+    public CustomUserDetails(User user) {
+        this.userId = user.getId();
+        this.providerId = user.getProviderId();
+        this.usernickname = user.getUsernickname();
+    }
+
+    // ✅ CustomUserDetails 생성자 추가
+    public CustomUserDetails(String providerId, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.providerId = providerId;
+        this.userId = null;  // OAuth2 로그인 시 UserId는 나중에 조회
+        this.usernickname = null;
+        this.authorities = authorities;
+    }
+
+
 }

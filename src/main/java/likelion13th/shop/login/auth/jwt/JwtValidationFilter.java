@@ -15,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -77,10 +75,12 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
             // ✅ 5️⃣ 권한 정보 추출 및 SecurityContextHolder에 주입
             var authorities = tokenProvider.getAuthFromClaims(claims);
-            UserDetails userDetails = User.withUsername(providerId) // provider_id 기반 UserDetails
-                    .password("") // 소셜 로그인은 비밀번호 없음
-                    .authorities(authorities)
-                    .build();
+            // ✅ CustomUserDetails 객체로 변경
+            CustomUserDetails userDetails = new CustomUserDetails(
+                    providerId,
+                    "",
+                    authorities
+            );
 
             // ✅ 인증 객체 생성
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -88,6 +88,9 @@ public class JwtValidationFilter extends OncePerRequestFilter {
                     null,
                     userDetails.getAuthorities()
             );
+
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+
 
             log.info("// 🟢 SecurityContext 주입 전: {}", SecurityContextHolder.getContext().getAuthentication());
 
