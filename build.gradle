@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.2'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id "com.github.johnrengelman.processes" version "0.5.0" //s3
 }
 
 group = 'likelion13th'
@@ -15,6 +16,13 @@ java {
 
 repositories {
 	mavenCentral()
+}
+
+// 환경변수 자동으로 주입해주는 역할
+processResources {
+	filesMatching("**/application.yml") {
+		expand(project.properties)
+	}
 }
 
 dependencies {
@@ -61,9 +69,12 @@ dependencies {
 
 	// ✅ Swagger (SpringDoc OpenAPI 3)
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
+	// ✅ AWS SDK for S3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
-test {
+	test {
 	useJUnitPlatform()
 }
 
