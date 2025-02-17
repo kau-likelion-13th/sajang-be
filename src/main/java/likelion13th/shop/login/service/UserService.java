@@ -5,7 +5,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
-import likelion13th.shop.domain.Address;
 import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.global.exception.GeneralException;
@@ -14,12 +13,13 @@ import likelion13th.shop.login.auth.jwt.RefreshToken;
 import likelion13th.shop.login.auth.jwt.TokenProvider;
 import likelion13th.shop.login.auth.repository.RefreshTokenRepository;
 import likelion13th.shop.login.auth.service.JpaUserDetailsManager;
-import likelion13th.shop.login.dto.UserRequestDto.UserReqDto;
 import likelion13th.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -44,36 +44,9 @@ public class UserService {
     /**
      * ✅ provider_id(String)으로 회원 찾기
      */
-    public User findByProviderId(String providerId) {
-        return userRepository.findByProviderId(providerId)
-                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
-    }
-
-    /**
-     * ✅ 신규 회원 생성 (provider_id 기반)
-     */
-    @Transactional
-    public User createUser(UserReqDto userReqDto) {
-        // 🔹 디버그 로그: 전달된 UserReqDto 정보
-        log.info("// [createUser] 전달받은 UserReqDto: providerId={}, usernickname={}",
-                userReqDto.getProviderId(), userReqDto.getUsernickname());
-
-        // 🔹 User 엔티티 생성
-        User newUser = User.builder()
-                .providerId(userReqDto.getProviderId())   // provider_id
-                .usernickname(userReqDto.getUsernickname())  // 닉네임
-                .deleteable(true)                        // 기본값 true
-                .mileage(0)                              // 초기 마일리지 0
-                .recentTotal(0)                          // 초기 결제 금액 0
-                .address(new Address("~", "주소를 입력해주세요", "주소를 입력해주세요"))
-                .build();
-
-        // 🔹 유저 저장
-        User savedUser = userRepository.save(newUser);
-        log.info("// 🟢 User 저장 완료: user_id={}, provider_id={}, usernickname={}",
-                savedUser.getId(), savedUser.getProviderId(), savedUser.getUsernickname());
-
-        return savedUser;
+    // UserService.java
+    public Optional<User> findByProviderId(String providerId) {
+        return userRepository.findByProviderId(providerId);
     }
 
     // ===========================================
@@ -158,7 +131,10 @@ public class UserService {
         }
 
         // ✅ 4️⃣ provider_id 기반 UserDetails 로드
-        String providerId = findByProviderId(refreshTokenEntity.getUser().getProviderId()).getProviderId();
+        String providerId = findByProviderId(refreshTokenEntity.getUser().getProviderId())
+                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND))
+                .getProviderId();
+
         UserDetails userDetails = manager.loadUserByUsername(providerId);
         log.info("// ✅ refresh token에서 추출한 provider_id: {}", providerId);
 
@@ -191,7 +167,8 @@ public class UserService {
             throw new GeneralException(ErrorCode.TOKEN_INVALID);
         }
 
-        User user = findByProviderId(providerId);
+        User user = findByProviderId(providerId)
+                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
 
         refreshTokenRepository.deleteByUser(user);
 

@@ -37,7 +37,7 @@ public class User extends BaseEntity {
 
     // 계정 삭제 가능 여부 (기본값 true)
     @Column(nullable = false)
-    private boolean deleteable = true;
+    private boolean deletable = true;
 
     // 마일리지 (기본값 0, 비즈니스 메서드로만 관리)
     @Column(nullable = false)
@@ -69,7 +69,7 @@ public class User extends BaseEntity {
 
     // 마일리지 사용
     public void useMileage(int mileage) {
-        if (mileage <= 0) {
+        if (mileage < 0) {
             throw new IllegalArgumentException("사용할 마일리지는 0보다 커야 합니다.");
         }
         if (this.mileage < mileage) {
@@ -92,13 +92,5 @@ public class User extends BaseEntity {
             throw new IllegalArgumentException("최근 결제 금액은 0보다 커야 합니다.");
         }
         this.recentTotal += amount;
-    }
-
-    // 주문 취소 시 총 결제 금액 차감
-    public void minusRecentTotal(int amount) {
-        if (amount < 0) {
-            throw new IllegalArgumentException("최근 결제 금액은 0보다 커야 합니다.");
-        }
-        this.recentTotal -= amount;
     }
 }

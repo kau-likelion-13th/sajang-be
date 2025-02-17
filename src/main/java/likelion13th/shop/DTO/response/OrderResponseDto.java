@@ -1,8 +1,8 @@
-package likelion13th.shop.DTO;
+package likelion13th.shop.DTO.response;
 
 
 import likelion13th.shop.domain.Order;
-import likelion13th.shop.domain.OrderStatus;
+import likelion13th.shop.global.constant.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,7 +15,7 @@ public class OrderResponseDto {
     private int quantity;
     private int totalPrice;
     private int finalPrice;
-    private int remainingMileage;
+    private int UseMileage; //남은 마일리지
     private OrderStatus status;
 
     public static OrderResponseDto from(Order order) {
@@ -28,6 +28,7 @@ public class OrderResponseDto {
                 order.getFinalPrice(),
                 order.getUser().getMileage(),
                 order.getStatus()
+
         );
     }
 }
