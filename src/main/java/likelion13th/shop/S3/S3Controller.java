@@ -1,6 +1,9 @@
 package likelion13th.shop.S3;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.global.api.SuccessCode;
@@ -29,8 +32,11 @@ public class S3Controller {
      * @return 업로드된 파일 URL
      */
     @PostMapping("/upload")
-    @Operation(summary = "url 생성", description = "S3 URL이 생성됩니다.")
-    public ApiResponse<Optional<String>> uploadFile(@RequestParam("file") MultipartFile file) {
+    @Operation(summary = "S3 파일 업로드", description = "AWS S3에 이미지를 업로드하고 URL을 반환합니다.")
+    public ApiResponse<?> uploadFile(@RequestParam("file")
+                                     @Parameter(description = "업로드할 이미지 파일", required = true,
+                                             content = @Content(mediaType = "multipart/form-data", schema = @Schema(type = "string", format = "binary")))
+                                     MultipartFile file) {
         // 1. 파일 유효성 검사
         if (file.isEmpty()) {
             throw new GeneralException(ErrorCode.S3_FILE_EMPTY);
