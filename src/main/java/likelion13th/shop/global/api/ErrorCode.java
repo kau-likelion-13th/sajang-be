@@ -16,6 +16,7 @@ public enum ErrorCode implements BaseCode { // 실패
     ALREADY_USED_NICKNAME(HttpStatus.FORBIDDEN, "USER_4031", "이미 사용중인 닉네임입니다."),
     OAUTH2_PROCESS_FAILED(HttpStatus.FORBIDDEN, "USER_2001", "OAuth2 사용자 정보 처리 실패"),
 
+    USER_NOT_AUTHENTICATED(HttpStatus.UNAUTHORIZED, "AUTH_0001", "카카오 로그인 정보가 없습니다."),
 
     // Jwt
     WRONG_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "JWT_4041", "일치하는 리프레시 토큰이 없습니다."),
@@ -23,7 +24,18 @@ public enum ErrorCode implements BaseCode { // 실패
     TOKEN_INVALID(HttpStatus.FORBIDDEN, "JWT_4032", "유효하지 않은 토큰입니다."),
     TOKEN_NO_AUTH(HttpStatus.FORBIDDEN, "JWT_4033", "권한 정보가 없는 토큰입니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "JWT_4011", "토큰 유효기간이 만료되었습니다."),
-    ;
+
+    // Category
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY_4041", "해당 카테고리를 찾을 수 없습니다."),
+
+    // Item
+    ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "ITEM_4041", "해당 상품을 찾을 수 없습니다."),
+
+    // Order
+    ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "ORDER_4041", "해당 주문을 찾을 수 없습니다."),
+    ORDER_CANCEL_FAILED(HttpStatus.BAD_REQUEST, "ORDER_4001", "주문 취소에 실패했습니다."),
+    ORDER_CREATE_FAILED(HttpStatus.BAD_REQUEST, "ORDER_4002", "주문 생성 요청이 잘못되었습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;

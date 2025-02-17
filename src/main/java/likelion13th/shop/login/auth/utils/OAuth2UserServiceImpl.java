@@ -69,6 +69,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
                     extendedAttributes,
                     "provider_id" // ✅ "provider_id"를 key로 설정
             );
+
         } catch (Exception e) {
             log.error("// ❌ 카카오 OAuth2 처리 중 오류 발생: {}", e.getMessage());
             throw new RuntimeException(ErrorCode.USER_NOT_FOUND.getMessage());

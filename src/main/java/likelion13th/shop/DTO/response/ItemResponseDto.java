@@ -1,4 +1,4 @@
-package likelion13th.shop.DTO;
+package likelion13th.shop.DTO.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import likelion13th.shop.domain.Category;
@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL) // null 필드는 제외
 public class ItemResponseDto {
     private Long id;
     private String name;
@@ -25,11 +24,10 @@ public class ItemResponseDto {
 
     // Item → ItemResponseDto 변환
     public static ItemResponseDto from(Item item) {
-        List<String> categoryNames = new ArrayList<>();
-        for (Category category : item.getCategories()) {
-            Category currentCategory = category; // 지역변수 사용
-            categoryNames.add(currentCategory.getName());
-        }
+        // 카테고리 이름 추출 (Stream API 사용)
+        List<String> categoryNames = item.getCategories().stream() //스트림으로 변환
+                .map(Category::getName) // Category 객체에서 이름 추출
+                .collect(Collectors.toList()); // 다시 리스트로 모으기
 
         return new ItemResponseDto(
                 item.getId(),

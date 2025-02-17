@@ -50,11 +50,4 @@ public class Item extends BaseEntity {
         this.brand = brand;
     }
 
-    // 양방향 관계 설정
-    public void addCategory(Category category) {
-        if (!this.categories.contains(category)) {
-            this.categories.add(category);
-            category.getItems().add(this);
-        }
-    }
 }

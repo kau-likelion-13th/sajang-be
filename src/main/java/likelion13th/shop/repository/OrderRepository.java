@@ -1,7 +1,7 @@
 package likelion13th.shop.repository;
 
 import likelion13th.shop.domain.Order;
-import likelion13th.shop.domain.OrderStatus;
+import likelion13th.shop.global.constant.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

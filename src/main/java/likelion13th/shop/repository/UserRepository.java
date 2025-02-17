@@ -20,5 +20,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByUsernickname(String usernickname);
 
     // 향후 필요 시 사용할 수 있도록 주석 유지
-    // Optional<User> findByKakaoId(String kakaoId);
+    //Optional<User> findByKakaoId(String kakaoId);
 }
