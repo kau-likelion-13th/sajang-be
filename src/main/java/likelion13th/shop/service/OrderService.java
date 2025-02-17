@@ -37,19 +37,12 @@ public class OrderService {
     }
 
     @Transactional
-    public Optional<OrderResponseDto> createOrder(OrderCreateRequest request) {
-        // 사용자 조회
-        Optional<User> userOptional = userRepository.findById(request.getUserId());
-        if (userOptional.isEmpty()) {
-            return Optional.empty(); // 사용자 없음
-        }
+    public Optional<OrderResponseDto> createOrder(OrderCreateRequest request, User user) {
         // 상품 조회
         Optional<Item> itemOptional = itemRepository.findById(request.getItemId());
         if (itemOptional.isEmpty()) {
             return Optional.empty(); // 상품 없음
         }
-
-        User user = userOptional.get();
         Item item = itemOptional.get();
 
         // 총 주문 금액 계산
