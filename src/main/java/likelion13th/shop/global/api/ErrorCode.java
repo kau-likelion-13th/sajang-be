@@ -16,6 +16,7 @@ public enum ErrorCode implements BaseCode { // 실패
     ALREADY_USED_NICKNAME(HttpStatus.FORBIDDEN, "USER_4031", "이미 사용중인 닉네임입니다."),
     OAUTH2_PROCESS_FAILED(HttpStatus.FORBIDDEN, "USER_2001", "OAuth2 사용자 정보 처리 실패"),
 
+    USER_NOT_AUTHENTICATED(HttpStatus.UNAUTHORIZED, "AUTH_0001", "카카오 로그인 정보가 없습니다."),
 
     // Jwt
     WRONG_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "JWT_4041", "일치하는 리프레시 토큰이 없습니다."),
@@ -26,13 +27,9 @@ public enum ErrorCode implements BaseCode { // 실패
 
     // Category
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY_4041", "해당 카테고리를 찾을 수 없습니다."),
-    CATEGORY_ITEMS_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY_4042", "해당 카테고리에 상품이 없습니다."),
 
     // Item
     ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "ITEM_4041", "해당 상품을 찾을 수 없습니다."),
-    ITEM_CREATE_FAILED(HttpStatus.BAD_REQUEST, "ITEM_4001", "상품 등록 요청이 잘못되었습니다."),
-
-    ITEM_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "ITEM_5001", "상품 삭제에 실패했습니다."),
 
     // Order
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "ORDER_4041", "해당 주문을 찾을 수 없습니다."),

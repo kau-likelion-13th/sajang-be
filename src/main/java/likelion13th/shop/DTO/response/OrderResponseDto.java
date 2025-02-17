@@ -15,7 +15,7 @@ public class OrderResponseDto {
     private int quantity;
     private int totalPrice;
     private int finalPrice;
-    private int remainingMileage;
+    private int UseMileage; //남은 마일리지
     private OrderStatus status;
 
     public static OrderResponseDto from(Order order) {
@@ -28,6 +28,7 @@ public class OrderResponseDto {
                 order.getFinalPrice(),
                 order.getUser().getMileage(),
                 order.getStatus()
+
         );
     }
 }

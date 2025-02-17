@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/orders")
@@ -24,50 +25,57 @@ public class OrderController {
     private final UserRepository userRepository;
     private final OrderService orderService;
 
-    //1. 주문 생성
+    // 주문 생성
     @PostMapping
     public ApiResponse<?> createOrder(
             @AuthenticationPrincipal OAuth2User oAuth2User,
             @RequestBody OrderCreateRequest request) {
 
-        // 카카오 로그인한 유저의 고유 ID 가져오기
-        String kakaoId = oAuth2User.getAttribute("id").toString();
-
-        // 카카오 ID를 통해 유저 정보 조회
-        User user = userRepository.findByKakaoId(kakaoId)
-                .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 사용자입니다."));
-
-        // 요청에 유저 ID 추가
-        request.setUserId(user.getId());
-
-        try {
-            OrderResponseDto newOrder = orderService.createOrder(request);
-            return ApiResponse.onSuccess(SuccessCode.ORDER_CREATE_SUCCESS, newOrder);
-        } catch (IllegalArgumentException e) {
-            return ApiResponse.onFailure(ErrorCode.USER_NOT_FOUND, e.getMessage());
-        } catch (Exception e) {
-            return ApiResponse.onFailure(ErrorCode.INTERNAL_SERVER_ERROR, "주문 생성 중 오류가 발생했습니다.");
-        }
-    }
-
-    /*@PostMapping
-    public ApiResponse<?> createOrder(@RequestBody OrderCreateRequest request) {
-        OrderResponseDto newOrder = orderService.createOrder(request);
-        if (newOrder == null) {
+        // 카카오 로그인한 유저의 providerId (카카오 고유 ID) 가져오기
+        if (oAuth2User == null || oAuth2User.getAttribute("id") == null) {
             return ApiResponse.onFailure(
-                    ErrorCode.ORDER_CREATE_FAILED,
-                    "주문 생성에 실패했습니다."
+                    ErrorCode.USER_NOT_AUTHENTICATED,
+                    "카카오 로그인 정보가 없습니다."
             );
         }
+
+        String providerId = oAuth2User.getAttribute("id").toString();
+        //kakaoId -> providerId 함
+
+        // 카카오 ID를 통해 유저 정보 조회
+        Optional<User> userOptional = userRepository.findByProviderId(providerId);
+        if (userOptional.isEmpty()) {
+            return ApiResponse.onFailure(
+                    ErrorCode.USER_NOT_FOUND,
+                    "등록되지 않은 사용자입니다."
+            );
+        }
+
+        // 요청에 유저 ID 추가
+        User user = userOptional.get();
+
+        // 주문 생성 시도
+        Optional<OrderResponseDto> newOrder = orderService.createOrder(request, user.getId());
+
+        // 실패 상황에 따른 통일된 응답 처리
+        if (newOrder.isEmpty()) {
+            return ApiResponse.onFailure(
+                    ErrorCode.ORDER_CREATE_FAILED,
+                    "주문 생성에 실패했습니다. (사용자, 상품, 마일리지 문제일 수 있습니다.)"
+            );
+        }
+
+        // 성공 시 `onSuccess` 반환
         return ApiResponse.onSuccess(
                 SuccessCode.ORDER_CREATE_SUCCESS,
-                newOrder
-        );*/
+                newOrder.get()
+        );
+    }
 
     //개별 주문 조회
     @GetMapping("/{orderId}")
     public ApiResponse<?> getOrderById(@PathVariable Long orderId) {
-        OrderResponseDto order = orderService.getOrderById(orderId);
+        Optional<OrderResponseDto> order = orderService.getOrderById(orderId);
         if (order == null) {
             return ApiResponse.onFailure(
                     ErrorCode.ORDER_NOT_FOUND,
@@ -79,7 +87,6 @@ public class OrderController {
                 order
         );
     }
-
 
     //모든 주문 목록 조회
     @GetMapping

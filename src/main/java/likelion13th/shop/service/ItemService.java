@@ -21,19 +21,10 @@ public class ItemService {
     //개별 상품 조회
     @Transactional
     public ItemResponseDto getItemById(Long itemId) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 상품을 찾을 수 없습니다."));
-
-        return ItemResponseDto.from(item);
+        Item item = itemRepository.findById(itemId).orElse(null);
+        return item != null ? ItemResponseDto.from(item) : null;
     }
 
-    //모든 상품 조회
-    @Transactional
-    public List<ItemResponseDto> getAllItems() {
-        List<Item> items = itemRepository.findAll();
-        return items.stream()
-                .map(ItemResponseDto::from)
-                .collect(Collectors.toList());
-    }
+
 
 }
