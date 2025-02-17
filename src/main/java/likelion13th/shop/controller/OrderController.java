@@ -3,19 +3,16 @@ package likelion13th.shop.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import likelion13th.shop.DTO.request.OrderCreateRequest;
 import likelion13th.shop.DTO.response.OrderResponseDto;
-import likelion13th.shop.domain.Order;
 import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.global.api.SuccessCode;
+import likelion13th.shop.global.exception.GeneralException;
 import likelion13th.shop.login.auth.jwt.CustomUserDetails;
 import likelion13th.shop.login.service.UserService;
-import likelion13th.shop.repository.OrderRepository;
-import likelion13th.shop.repository.UserRepository;
 import likelion13th.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +22,6 @@ import java.util.Optional;
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
-    private final UserRepository userRepository;
     private final OrderService orderService;
     private final UserService userService;
 
@@ -34,21 +30,13 @@ public class OrderController {
     @Operation(summary = "주문 생성", description = "로그인한 사용자의 주문을 생성합니다.")
     public ApiResponse<?> createOrder(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestBody OrderCreateRequest request) {
+            @RequestBody OrderCreateRequest request
+    ) {
+        User user = userService.findByProviderId(customUserDetails.getProviderId())
+                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
 
-        // ✅ 1. 인증된 유저 정보 가져오기
-        String providerId = customUserDetails.getProviderId();
+        Optional<OrderResponseDto> newOrder = orderService.createOrder(request, user);
 
-        // ✅ 2. providerId 기반으로 유저 조회
-        User user = userService.findByProviderId(providerId);
-
-        // ✅ 3. 요청 객체에 User 정보 추가
-        request.setUserId(user.getId());
-
-        // ✅ 4. 주문 생성
-        Optional<OrderResponseDto> newOrder = orderService.createOrder(request);
-
-        // ✅ 5. 성공 응답 반환
         return ApiResponse.onSuccess(SuccessCode.ORDER_CREATE_SUCCESS, newOrder);
     }
 

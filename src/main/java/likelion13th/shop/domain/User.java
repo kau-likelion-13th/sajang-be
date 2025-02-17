@@ -37,7 +37,7 @@ public class User extends BaseEntity {
 
     // 계정 삭제 가능 여부 (기본값 true)
     @Column(nullable = false)
-    private boolean deleteable = true;
+    private boolean deletable = true;
 
     // 마일리지 (기본값 0, 비즈니스 메서드로만 관리)
     @Column(nullable = false)

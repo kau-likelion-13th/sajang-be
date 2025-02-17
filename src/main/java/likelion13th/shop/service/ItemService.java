@@ -1,6 +1,5 @@
 package likelion13th.shop.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import likelion13th.shop.DTO.response.ItemResponseDto;
 import likelion13th.shop.domain.Item;
@@ -9,8 +8,6 @@ import likelion13th.shop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
