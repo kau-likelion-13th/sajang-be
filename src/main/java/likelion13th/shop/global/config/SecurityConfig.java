@@ -38,11 +38,15 @@ public class SecurityConfig {
                 // 🔹 인증 및 권한 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/token/**",              // 🔑 토큰 재발급 및 생성
-                                "/swagger-ui/**",         // 🔑 Swagger UI
-                                "/v3/api-docs/**",        // 🔑 API Docs
+                                "/health", // health check
+
+                                "/swagger-ui/**",         // 🔑 Swagger
+                                "/v3/api-docs/**",
+
                                 "/users/reissue",         // 🔑 토큰 재발급
                                 "/users/logout",          // 🔑 로그아웃
+
+                                "/token/**",              // 🔑 토큰 재발급 및 생성
                                 "/oauth2/**",             // 🟡 카카오 OAuth 리디렉션
                                 "/login/oauth2/**"        // 🟡 카카오 OAuth 콜백
                         ).permitAll()
