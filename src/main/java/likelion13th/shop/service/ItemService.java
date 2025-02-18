@@ -21,7 +21,4 @@ public class ItemService {
         Item item = itemRepository.findById(itemId).orElse(null);
         return item != null ? ItemResponseDto.from(item) : null;
     }
-
-
-
 }

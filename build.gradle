@@ -61,12 +61,16 @@ dependencies {
 
 	// ✅ Swagger (SpringDoc OpenAPI 3)
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
+	// ✅ AWS SDK for S3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
-test {
+	test {
 	useJUnitPlatform()
 }
 
 /*tasks.named('test') {
 	useJUnitPlatform()
 }*/
+

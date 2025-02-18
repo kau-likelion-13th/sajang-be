@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# 보안상의 이유로 .env와 application.yml은 업로드 금지
+.env
+application.yml
