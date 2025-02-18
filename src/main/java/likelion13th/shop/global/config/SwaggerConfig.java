@@ -1,5 +1,7 @@
 package likelion13th.shop.global.config;
 
+//import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -8,6 +10,8 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
@@ -35,6 +39,10 @@ public class SwaggerConfig {
                         .type(SecurityScheme.Type.APIKEY)
                         .in(SecurityScheme.In.HEADER)
                         .description("Refresh Token을 입력하세요."));
+
+                // 🔹 `multipart/form-data` 지원 추가
+                //.addServersItem(new Server().url("/"));
+
     }
 
     @Bean

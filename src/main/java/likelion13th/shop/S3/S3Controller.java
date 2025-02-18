@@ -9,8 +9,7 @@ import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.global.api.SuccessCode;
 import likelion13th.shop.global.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,13 +30,11 @@ public class S3Controller {
      * @param file Multipart 파일
      * @return 업로드된 파일 URL
      */
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "S3 파일 업로드", description = "AWS S3에 이미지를 업로드하고 URL을 반환합니다.")
-    public ApiResponse<?> uploadFile(@RequestParam("file")
-                                     @Parameter(description = "업로드할 이미지 파일", required = true,
-                                             content = @Content(mediaType = "multipart/form-data", schema = @Schema(type = "string", format = "binary")))
-                                     MultipartFile file) {
-        // 1. 파일 유효성 검사
+    public ApiResponse<?> uploadFile(@RequestParam("photo") MultipartFile file) {
+
+    // 1. 파일 유효성 검사
         if (file.isEmpty()) {
             throw new GeneralException(ErrorCode.S3_FILE_EMPTY);
         }
@@ -54,4 +51,6 @@ public class S3Controller {
         // 4. 결과 반환 (주문 API 스타일)
         return ApiResponse.onSuccess(SuccessCode.S3_UPLOAD_SUCCESS, fileUrl);
     }
+
+
 }
