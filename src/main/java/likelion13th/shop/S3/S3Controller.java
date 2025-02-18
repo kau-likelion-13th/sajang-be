@@ -34,7 +34,7 @@ public class S3Controller {
     @Operation(summary = "S3 파일 업로드", description = "AWS S3에 이미지를 업로드하고 URL을 반환합니다.")
     public ApiResponse<?> uploadFile(@RequestParam("photo") MultipartFile file) {
 
-    // 1. 파일 유효성 검사
+        // 1. 파일 유효성 검사
         if (file.isEmpty()) {
             throw new GeneralException(ErrorCode.S3_FILE_EMPTY);
         }

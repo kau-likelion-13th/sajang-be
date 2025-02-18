@@ -39,10 +39,6 @@ public class SwaggerConfig {
                         .type(SecurityScheme.Type.APIKEY)
                         .in(SecurityScheme.In.HEADER)
                         .description("Refresh Token을 입력하세요."));
-
-                // 🔹 `multipart/form-data` 지원 추가
-                //.addServersItem(new Server().url("/"));
-
     }
 
     @Bean

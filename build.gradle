@@ -62,9 +62,6 @@ dependencies {
 	// ✅ Swagger (SpringDoc OpenAPI 3)
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 
-
-	// ✅ Spring Boot 3.x + AWS S3 호환 버전
-	//implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.2'
 	// ✅ AWS SDK for S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
@@ -77,10 +74,3 @@ dependencies {
 	useJUnitPlatform()
 }*/
 
-// 환경변수 가져오기
-tasks.named('bootRun') {
-	environment "AWS_ACCESS_KEY", System.getenv("AWS_ACCESS_KEY")
-	environment "AWS_SECRET_KEY", System.getenv("AWS_SECRET_KEY")
-	environment "AWS_REGION", System.getenv("AWS_REGION")
-	environment "AWS_BUCKET", System.getenv("AWS_BUCKET")
-}
