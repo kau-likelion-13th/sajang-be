@@ -84,3 +84,4 @@ jobs:
           region: 'ap-northeast-2'              # ✅ 서울 리전
           deployment_package: 'deploy/deploy.zip'
           wait_for_deployment: false
+# 왜 안만들어져
