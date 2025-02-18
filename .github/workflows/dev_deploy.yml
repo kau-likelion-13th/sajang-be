@@ -67,11 +67,10 @@ jobs:
       - name: Generate deployment package
         run: |
           mkdir -p deploy
-          cp build/libs/*.jar deploy/application.jar
+          cp build/libs/*boot.jar deploy/application.jar  # bootJar 사용
           cp Procfile deploy/Procfile
-          cp -r .ebextensions_dev deploy/.ebextensions
-          cp -r .platform deploy/.platform
-          cd deploy && zip -r deploy.zip .
+          cp -r .ebextensions deploy/.ebextensions
+          zip -r deploy/deploy.zip deploy/
 
       # ✅ 9️⃣ Elastic Beanstalk에 배포
       - name: Deploy to Elastic Beanstalk
@@ -85,3 +84,4 @@ jobs:
           region: 'ap-northeast-2'              # ✅ 서울 리전
           deployment_package: 'deploy/deploy.zip'
           wait_for_deployment: false
+# 왜 안만들어져
