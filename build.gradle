@@ -66,14 +66,6 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
-	test {
-	useJUnitPlatform()
-}
-
-jar {
-	enabled = false
-}
-
 
 /*tasks.named('test') {
 	useJUnitPlatform()
