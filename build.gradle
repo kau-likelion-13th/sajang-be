@@ -71,3 +71,7 @@ dependencies {
 	useJUnitPlatform()
 }*/
 
+// ✅ 일반 jar 생성 비활성화 (bootJar만 생성)
+tasks.named('jar') {
+	enabled = false
+}
