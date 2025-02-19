@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 //접근 제어자를 protected로 설정
 @Getter
 public class Address {
+    // 나중에 지워야 함
 
     @Column(nullable = true)
     private String zipcode;
