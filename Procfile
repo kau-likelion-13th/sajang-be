@@ -1,1 +1,1 @@
-web: java -Djava.net.preferIPv4Stack=true -jar application.jar
+web: appstart
