@@ -78,7 +78,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:8080",
-                "http://sajang-dev-env-2.eba-3ycixkjh.ap-northeast-2.elasticbeanstalk.com"
+                "http://SAJANG-dev-env-2.eba-3ycixkjh.ap-northeast-2.elasticbeanstalk.com "
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
