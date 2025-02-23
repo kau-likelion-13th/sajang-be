@@ -53,10 +53,12 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 // 🔹 세션 정책: STATELESS (JWT 기반)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 // 🔹 OAuth2 로그인 설정 (UserService 연동)
                 .oauth2Login(oauth2 -> oauth2
+                        //.loginPage("/users/login")
                         .successHandler(oAuth2SuccessHandler)
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2UserService))
@@ -78,7 +80,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:8080",
-                "http://sajang-dev-env-2.eba-3ycixkjh.ap-northeast-2.elasticbeanstalk.com"
+                "http://SAJANG-dev-env-2.eba-3ycixkjh.ap-northeast-2.elasticbeanstalk.com"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));

@@ -8,7 +8,6 @@ import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.SuccessCode;
 import likelion13th.shop.login.auth.dto.JwtDto;
 import likelion13th.shop.login.auth.jwt.CustomUserDetails;
-import likelion13th.shop.login.auth.repository.RefreshTokenRepository;
 import likelion13th.shop.login.auth.service.JpaUserDetailsManager;
 import likelion13th.shop.login.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,6 @@ import java.io.IOException;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private final JpaUserDetailsManager jpaUserDetailsManager;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final UserService userService;
 
     @Override
