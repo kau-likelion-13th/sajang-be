@@ -1,5 +1,6 @@
 package likelion13th.shop.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import likelion13th.shop.DTO.response.ItemResponseDto;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.global.api.ApiResponse;
@@ -23,6 +24,7 @@ public class CategoryController {
 
     // 상품 조회(카테고리별)
     @GetMapping("/{categoryId}/items")
+    @Operation(summary = "카테고리별 상품 조회", description = "상품을 카테고리 별로 조회합니다.")
     public ApiResponse<?> getItemsByCategory(@PathVariable Long categoryId) {
         Optional<Category> categoryOptional = categoryService.findCategoryById(categoryId);
         if (categoryOptional.isEmpty()) {

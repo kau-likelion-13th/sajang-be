@@ -1,6 +1,5 @@
 package likelion13th.shop.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import likelion13th.shop.DTO.request.OrderCreateRequest;
 import likelion13th.shop.DTO.response.OrderResponseDto;
@@ -36,6 +35,7 @@ public class OrderService {
         return Math.max(finalPrice, 0);  // 최소 결제 금액 0원 보장
     }
 
+    // 주문 생성
     @Transactional
     public Optional<OrderResponseDto> createOrder(OrderCreateRequest request, User user) {
         // 상품 조회
@@ -78,12 +78,16 @@ public class OrderService {
                 .map(OrderResponseDto::from);
     }
 
+    //사용자의 모든 주문 조회
     @Transactional
-    public List<OrderResponseDto> getAllOrders() {
-        return orderRepository.findAll().stream()
+    public List<OrderResponseDto> getAllOrders(User user) {
+        //프록시 객체 -> DTO로 변환 후 반환
+        return user.getOrders().stream()
                 .map(OrderResponseDto::from)
                 .collect(Collectors.toList());
+
     }
+
     //삭제가 아니라 주문 상태만 변경
     //배송 완료된 상품, 주문 취소된 상품은 주문 취소 불가능
     public boolean cancelOrder(Long orderId) {
@@ -100,15 +104,18 @@ public class OrderService {
         //주문 상태 변경
         order.setStatus(OrderStatus.CANCEL);
 
-        //마일리지 환불
         User user = order.getUser();
-        user.addMileage(order.getTotalPrice() - order.getFinalPrice());
+
         // 회수해야할 마일리지보다 가지고 있는 마일리지가 적을 경우
         if(user.getMileage()<(int)(order.getFinalPrice()*0.1)){
             throw new IllegalArgumentException("마일리지 회수가 불가능해 주문 취소를 할 수 없습니다.");
         }
         // 결제 시에 적립되었던 마일리지 차감 ( 결제 금액의 10%)
         user.useMileage((int)(order.getFinalPrice()*0.1));
+
+        //마일리지 환불
+        user.addMileage(order.getTotalPrice() - order.getFinalPrice());
+
         //@Transactional에 의해 자동 저장
 
         //return OrderResponseDto.from(order);

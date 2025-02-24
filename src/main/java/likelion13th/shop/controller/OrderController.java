@@ -3,6 +3,7 @@ package likelion13th.shop.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import likelion13th.shop.DTO.request.OrderCreateRequest;
 import likelion13th.shop.DTO.response.OrderResponseDto;
+import likelion13th.shop.domain.Order;
 import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
@@ -43,6 +44,7 @@ public class OrderController {
 
     //개별 주문 조회
     @GetMapping("/{orderId}")
+    @Operation(summary = "주문 개별 조회", description = "로그인한 사용자의 주문을 개별 조회합니다.")
     public ApiResponse<?> getOrderById(@PathVariable Long orderId) {
         Optional<OrderResponseDto> order = orderService.getOrderById(orderId);
         if (order == null) {
@@ -59,8 +61,15 @@ public class OrderController {
 
     //모든 주문 목록 조회
     @GetMapping
-    public ApiResponse<?> getAllOrders() {
-        List<OrderResponseDto> orders = orderService.getAllOrders();
+    @Operation(summary = "모든 주문 조회", description = "로그인한 사용자의 모든 주문을 목록으로 조회합니다.")
+    public ApiResponse<?> getAllOrders(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        User user = userService.findByProviderId(customUserDetails.getProviderId())
+                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
+
+        List<OrderResponseDto> orders = orderService.getAllOrders(user);
+
         if (orders.isEmpty()) {
             return ApiResponse.onFailure(
                     ErrorCode.ORDER_NOT_FOUND,
@@ -75,6 +84,7 @@ public class OrderController {
 
     //주문 취소
     @PutMapping("/{orderId}/cancel")
+    @Operation(summary = "주문 취소", description = "로그인한 사용자의 주문을 취소합니다.")
     public ApiResponse<?> cancelOrder(@PathVariable Long orderId) {
         boolean isCancelled = orderService.cancelOrder(orderId);
         if (!isCancelled) {
