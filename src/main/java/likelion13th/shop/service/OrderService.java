@@ -100,9 +100,7 @@ public class OrderService {
         //주문 상태 변경
         order.setStatus(OrderStatus.CANCEL);
 
-        //마일리지 환불
         User user = order.getUser();
-        user.addMileage(order.getTotalPrice() - order.getFinalPrice());
 
         // 회수해야할 마일리지보다 가지고 있는 마일리지가 적을 경우
         if(user.getMileage()<(int)(order.getFinalPrice()*0.1)){
@@ -110,6 +108,10 @@ public class OrderService {
         }
         // 결제 시에 적립되었던 마일리지 차감 ( 결제 금액의 10%)
         user.useMileage((int)(order.getFinalPrice()*0.1));
+
+        //마일리지 환불
+        user.addMileage(order.getTotalPrice() - order.getFinalPrice());
+
         //@Transactional에 의해 자동 저장
 
         //return OrderResponseDto.from(order);
