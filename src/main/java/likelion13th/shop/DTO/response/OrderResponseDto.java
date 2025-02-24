@@ -6,6 +6,8 @@ import likelion13th.shop.global.constant.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @AllArgsConstructor
 public class OrderResponseDto {
@@ -17,6 +19,7 @@ public class OrderResponseDto {
     private int finalPrice;
     private int mileageToUse; //사용한 마일리지
     private OrderStatus status;
+    private LocalDateTime createdAt;
 
     public static OrderResponseDto from(Order order) {
         return new OrderResponseDto(
@@ -27,8 +30,8 @@ public class OrderResponseDto {
                 order.getTotalPrice(),
                 order.getFinalPrice(),
                 order.getTotalPrice() - order.getFinalPrice(),
-                order.getStatus()
-
+                order.getStatus(),
+                order.getCreatedAt()
         );
     }
 }
