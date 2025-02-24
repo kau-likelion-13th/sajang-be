@@ -31,6 +31,7 @@ public class S3Controller {
      * @return 업로드된 파일 URL
      */
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "S3 파일 업로드", description = "AWS S3에 이미지를 업로드하고 URL을 반환합니다.")
     public ApiResponse<?> uploadFile(@RequestParam("photo") MultipartFile file) {
 
         // 1. 파일 유효성 검사

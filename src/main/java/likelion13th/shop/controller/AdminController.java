@@ -1,5 +1,6 @@
 package likelion13th.shop.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.repository.CategoryRepository;
 import likelion13th.shop.repository.ItemRepository;
@@ -16,6 +17,7 @@ public class AdminController {
 
     //테스트 데이터 전체 삭제 API
     @DeleteMapping("/reset")
+    @Operation(summary = "테스트 데이터 전체 삭제", description = "테스트 데이터를 모두 삭제합니다.")
     public ResponseEntity<String> resetDatabase() {
         //중간테이블 삭제
         for (Category category : categoryRepository.findAll()) {

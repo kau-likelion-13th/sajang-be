@@ -1,5 +1,6 @@
 package likelion13th.shop.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import likelion13th.shop.DTO.response.ItemResponseDto;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
@@ -16,6 +17,7 @@ public class ItemController {
 
     //개별 상품 조회
     @GetMapping("/{itemId}")
+    @Operation(summary = "상품 개별 조회", description = "상품을 개별 조회합니다.")
     public ApiResponse<?> getItemById(@PathVariable Long itemId) {
         ItemResponseDto item = itemService.getItemById(itemId);
         if (item == null) {
