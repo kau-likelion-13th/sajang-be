@@ -1,6 +1,5 @@
 package likelion13th.shop.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import likelion13th.shop.DTO.request.OrderCreateRequest;
 import likelion13th.shop.DTO.response.OrderResponseDto;
@@ -36,6 +35,7 @@ public class OrderService {
         return Math.max(finalPrice, 0);  // 최소 결제 금액 0원 보장
     }
 
+    // 주문 생성
     @Transactional
     public Optional<OrderResponseDto> createOrder(OrderCreateRequest request, User user) {
         // 상품 조회
@@ -78,12 +78,19 @@ public class OrderService {
                 .map(OrderResponseDto::from);
     }
 
+    //사용자의 모든 주문 조회
     @Transactional
-    public List<OrderResponseDto> getAllOrders() {
-        return orderRepository.findAll().stream()
+    public List<OrderResponseDto> getAllOrders(User user) {
+        /*return orderRepository.findAll().stream()
+                .map(OrderResponseDto::from)
+                .collect(Collectors.toList());*/
+        //프록시 객체 -> DTO로 변환 후 반환
+        return user.getOrders().stream()
                 .map(OrderResponseDto::from)
                 .collect(Collectors.toList());
+
     }
+
     //삭제가 아니라 주문 상태만 변경
     //배송 완료된 상품, 주문 취소된 상품은 주문 취소 불가능
     public boolean cancelOrder(Long orderId) {
