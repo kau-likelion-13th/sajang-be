@@ -103,6 +103,7 @@ public class OrderService {
         //마일리지 환불
         User user = order.getUser();
         user.addMileage(order.getTotalPrice() - order.getFinalPrice());
+
         // 회수해야할 마일리지보다 가지고 있는 마일리지가 적을 경우
         if(user.getMileage()<(int)(order.getFinalPrice()*0.1)){
             throw new IllegalArgumentException("마일리지 회수가 불가능해 주문 취소를 할 수 없습니다.");
