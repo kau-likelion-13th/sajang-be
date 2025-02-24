@@ -81,9 +81,6 @@ public class OrderService {
     //사용자의 모든 주문 조회
     @Transactional
     public List<OrderResponseDto> getAllOrders(User user) {
-        /*return orderRepository.findAll().stream()
-                .map(OrderResponseDto::from)
-                .collect(Collectors.toList());*/
         //프록시 객체 -> DTO로 변환 후 반환
         return user.getOrders().stream()
                 .map(OrderResponseDto::from)
