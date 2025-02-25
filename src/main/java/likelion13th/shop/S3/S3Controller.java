@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @RestController  // REST API 컨트롤러
@@ -27,30 +25,31 @@ public class S3Controller {
 
     private final S3Service s3Service;  // S3 업로드 서비스 주입
 
-
+    /**
+     * S3 파일 업로드 API
+     * @param file Multipart 파일
+     * @return 업로드된 파일 URL
+     */
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "S3 파일 업로드", description = "AWS S3에 이미지를 업로드하고 URL을 반환합니다.")
-    public ApiResponse<?> uploadFile(@RequestParam("files") List<MultipartFile> files) {
-        List<String> fileUrls = new ArrayList<>();
+    public ApiResponse<?> uploadFile(@RequestParam("photo") MultipartFile file) {
 
-
-        for (MultipartFile file : files) {
-            // 1. 파일 유효성 검사
-            if (file.isEmpty()) {
-                throw new GeneralException(ErrorCode.S3_FILE_EMPTY);
-            }
-            // 2. 파일 형식 검사 (예: 이미지만 허용)
-            String contentType = file.getContentType();
-            if (contentType == null || !contentType.startsWith("image/")) {
-                throw new GeneralException(ErrorCode.S3_INVALID_FILE_TYPE);
-            }
-
-            // 3. S3 업로드
-            String fileUrl = s3Service.uploadFile(file);  // S3에 파일 업로드 후 URL 반환
-            fileUrls.add(fileUrl);
+        // 1. 파일 유효성 검사
+        if (file.isEmpty()) {
+            throw new GeneralException(ErrorCode.S3_FILE_EMPTY);
         }
+
+        // 2. 파일 형식 검사 (예: 이미지만 허용)
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new GeneralException(ErrorCode.S3_INVALID_FILE_TYPE);
+        }
+
+        // 3. S3 업로드
+        Optional<String> fileUrl = Optional.ofNullable(s3Service.uploadFile(file));
+
         // 4. 결과 반환 (주문 API 스타일)
-        return ApiResponse.onSuccess(SuccessCode.S3_UPLOAD_SUCCESS, fileUrls);
+        return ApiResponse.onSuccess(SuccessCode.S3_UPLOAD_SUCCESS, fileUrl);
     }
 
 
