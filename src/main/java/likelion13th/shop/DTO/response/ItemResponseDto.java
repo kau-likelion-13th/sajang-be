@@ -1,18 +1,11 @@
 package likelion13th.shop.DTO.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
-import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Item;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
