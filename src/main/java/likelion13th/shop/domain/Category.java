@@ -31,7 +31,8 @@ public class Category {
             inverseJoinColumns = @JoinColumn(name = "item_id"))
     private List<Item> items = new ArrayList<>();
 
-    //name 받는 생성자
+
+    // 생성자로 기본 값 설정
     public Category(String name) {
         this.name = name;
     }

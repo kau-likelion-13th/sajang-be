@@ -28,10 +28,14 @@ public class Item extends BaseEntity {
     private int price;
 
     @Column(nullable = false)
-    private String thumbnail_img;
+    private String imagePath;
 
     @Column(nullable = false)
     private String brand;
+
+    @Column(nullable = false)
+    @Setter
+    private boolean isNew= false;
 
     //Category와 다대다 연관관계 설정
     @ManyToMany(mappedBy = "items")
@@ -42,12 +46,12 @@ public class Item extends BaseEntity {
     @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
-
-    public Item(String item_name, int price, String thumbnail_img, String brand) {
+    public Item(String item_name, int price, String thumbnail_img, String brand, boolean isNew) {
         this.item_name = item_name;
         this.price = price;
-        this.thumbnail_img = thumbnail_img;
+        this.imagePath = imagePath;
         this.brand = brand;
+        this.isNew= false;
     }
 
 }
