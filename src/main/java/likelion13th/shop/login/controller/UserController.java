@@ -4,18 +4,19 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import likelion13th.shop.DTO.response.UserMileageResponse;
+import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.global.api.SuccessCode;
 import likelion13th.shop.global.exception.GeneralException;
 import likelion13th.shop.login.auth.dto.JwtDto;
+import likelion13th.shop.login.auth.jwt.CustomUserDetails;
 import likelion13th.shop.login.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "회원", description = "회원 관련 API 입니다.")
 @RestController
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequestMapping("/users")
 public class UserController {
-
     private final UserService userService;
 
     // ✅ 토큰 재발급 API
@@ -65,7 +65,19 @@ public class UserController {
         return ApiResponse.onSuccess(SuccessCode.USER_LOGOUT_SUCCESS, null);
     }
 
+    // 로그인한 사용자의 사용 가능 마일리지 조회
+    @GetMapping("/mileage")
+    @Operation(summary = "사용 가능 마일리지 조회", description = "로그인한 사용자의 사용 가능 마일리지를 조회합니다.")
+    public ApiResponse<UserMileageResponse> getAvailableMileage(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails
+    ) {
+        // 로그인한 사용자 정보 조회
+        User user = userService.findByProviderId(customUserDetails.getProviderId())
+                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
 
+        // 사용 가능한 마일리지 반환
+        return ApiResponse.onSuccess(SuccessCode.USER_MILEAGE_SUCCESS, new UserMileageResponse(user.getMaxMileage()));
+    }
 }
 
 

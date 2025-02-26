@@ -49,7 +49,7 @@ public class OrderService {
         int totalPrice = item.getPrice() * request.getQuantity();
         // 마일리지 유효성 검사
         int mileageToUse = request.getMileageToUse();
-        if (mileageToUse > user.getMileage()) {
+        if (mileageToUse > user.getMaxMileage()) {
             throw new IllegalArgumentException("보유한 마일리지를 초과하여 사용할 수 없습니다.");
         }
 
@@ -107,7 +107,7 @@ public class OrderService {
         User user = order.getUser();
 
         // 회수해야할 마일리지보다 가지고 있는 마일리지가 적을 경우
-        if (user.getMileage() < (int) (order.getFinalPrice() * 0.1)) {
+        if (user.getMaxMileage() < (int) (order.getFinalPrice() * 0.1)) {
             throw new IllegalArgumentException("마일리지 회수가 불가능해 주문 취소를 할 수 없습니다.");
         }
         // 결제 시에 적립되었던 마일리지 차감 ( 결제 금액의 10%)
