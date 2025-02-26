@@ -1,9 +1,6 @@
 package likelion13th.shop.S3;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.global.api.SuccessCode;
@@ -27,6 +24,7 @@ public class S3Controller {
 
     /**
      * S3 파일 업로드 API
+     *
      * @param file Multipart 파일
      * @return 업로드된 파일 URL
      */

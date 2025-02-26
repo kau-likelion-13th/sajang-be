@@ -1,6 +1,7 @@
 package likelion13th.shop.DTO.response;
 
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import likelion13th.shop.domain.Item;
 import lombok.AllArgsConstructor;

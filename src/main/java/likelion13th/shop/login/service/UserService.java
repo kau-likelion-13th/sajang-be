@@ -1,9 +1,7 @@
 package likelion13th.shop.login.service;
 
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ErrorCode;
@@ -114,42 +112,62 @@ public class UserService {
      */
     @Transactional
     public JwtDto reissue(HttpServletRequest request) {
-        // 1️⃣ Refresh Token 추출
-        String refreshToken = extractRefreshToken(request);
-        if (refreshToken == null) {
+        log.info("🔄 [STEP 1] Access Token 재발급 요청 시작...");
+
+        // ✅ 1️⃣ Access Token에서 providerId 추출
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken != null && accessToken.startsWith("Bearer ")) {
+            accessToken = accessToken.substring(7);
+        }
+
+        // ✅ 2️⃣ Access Token의 Claims 파싱 (만료된 토큰이어도 Claims 추출 가능)
+        Claims claims;
+        try {
+            claims = tokenProvider.parseClaims(accessToken);
+        } catch (Exception e) {
+            log.error("❌ [ERROR] Access Token이 유효하지 않음: {}", e.getMessage());
             throw new GeneralException(ErrorCode.TOKEN_INVALID);
         }
 
-        // 2️⃣ 저장된 Refresh Token 확인
-        RefreshToken refreshTokenEntity = refreshTokenRepository.findByRefreshToken(refreshToken)
+        String providerId = claims.getSubject();
+        log.info("✅ [STEP 2] Access Token에서 추출한 providerId: {}", providerId);
+
+        if (providerId == null || providerId.isEmpty()) {
+            throw new GeneralException(ErrorCode.TOKEN_INVALID);
+        }
+
+        // ✅ 3️⃣ providerId 기반으로 User 조회
+        Optional<User> userOpt = findByProviderId(providerId);
+        if (userOpt.isEmpty()) {
+            log.error("❌ [ERROR] providerId={} 에 해당하는 사용자를 찾을 수 없음", providerId);
+            throw new GeneralException(ErrorCode.USER_NOT_FOUND);
+        }
+        User user = userOpt.get();
+        log.info("✅ [STEP 3] User 조회 성공 (user_id={}, providerId={})", user.getId(), user.getProviderId());
+
+        // ✅ 4️⃣ DB에서 Refresh Token 조회
+        RefreshToken refreshTokenEntity = refreshTokenRepository.findByUser(user)
                 .orElseThrow(() -> new GeneralException(ErrorCode.WRONG_REFRESH_TOKEN));
 
-        // 3️⃣ Refresh Token 유효성 검사
-        if (!tokenProvider.validateToken(refreshToken)) {
-            refreshTokenRepository.deleteById(refreshTokenEntity.getId());
+        // ✅ 5️⃣ Refresh Token 유효성 검사
+        if (!tokenProvider.validateToken(refreshTokenEntity.getRefreshToken())) {
+            refreshTokenRepository.deleteByUser(user); // 만료된 Refresh Token 삭제
+            log.error("❌ [ERROR] Refresh Token이 만료됨 - 삭제 완료 (user_id={})", user.getId());
             throw new GeneralException(ErrorCode.TOKEN_EXPIRED);
         }
 
-        // ✅ 4️⃣ provider_id 기반 UserDetails 로드
-        String providerId = findByProviderId(refreshTokenEntity.getUser().getProviderId())
-                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND))
-                .getProviderId();
-
+        // ✅ 6️⃣ 새 Access Token 발급
         UserDetails userDetails = manager.loadUserByUsername(providerId);
-        log.info("// ✅ refresh token에서 추출한 provider_id: {}", providerId);
-
-        // ✅ 5️⃣ UserDetails 기반 Access/Refresh Token 생성
         JwtDto newJwt = tokenProvider.generateTokens(userDetails);
+        log.info("✅ [STEP 4] 새로운 Access Token 발급 완료");
 
-        // 6️⃣ Refresh Token 갱신 및 저장
+        // ✅ 7️⃣ Refresh Token 갱신 (기존 토큰 삭제 후 새로운 토큰 저장)
         refreshTokenEntity.updateRefreshToken(newJwt.getRefreshToken());
-        Claims refreshTokenClaims = tokenProvider.parseClaims(newJwt.getRefreshToken());
-        Long validPeriod = refreshTokenClaims.getExpiration().getTime() - System.currentTimeMillis();
-        refreshTokenEntity.updateTtl(validPeriod);
         refreshTokenRepository.save(refreshTokenEntity);
 
         return newJwt;
     }
+
 
     // ===========================================
     // ✅ 5️⃣ 로그아웃 서비스
@@ -159,7 +177,13 @@ public class UserService {
      * ✅ 로그아웃 (Refresh Token 삭제)
      */
     @Transactional
-    public void logout(String accessToken, HttpServletResponse response) {
+    public void logout(HttpServletRequest request) {
+        // 1 Access Token에서 providerId 추출
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken != null && accessToken.startsWith("Bearer ")) {
+            accessToken = accessToken.substring(7);
+        }
+
         Claims claims = tokenProvider.parseClaims(accessToken);
         String providerId = claims.getSubject();
 
@@ -167,42 +191,16 @@ public class UserService {
             throw new GeneralException(ErrorCode.TOKEN_INVALID);
         }
 
-        User user = findByProviderId(providerId)
-                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
+        // 2️ providerId 기반으로 User 조회
+        Optional<User> userOpt = findByProviderId(providerId);
+        if (userOpt.isEmpty()) {
+            throw new GeneralException(ErrorCode.USER_NOT_FOUND);
+        }
+        User user = userOpt.get();
 
+        // 3 Refresh Token 삭제 (DB에서 제거)
         refreshTokenRepository.deleteByUser(user);
-
-        boolean exists = refreshTokenRepository.findByUser(user).isPresent();
-        if (exists) {
-            log.warn("// ❌ RefreshToken 삭제 실패 - 여전히 DB에 존재 (user_id: {})", user.getId());
-        } else {
-            log.info("// 🗑️ RefreshToken 삭제 확인 완료 - DB에서 제거됨 (user_id: {})", user.getId());
-        }
-
-        Cookie cookie = new Cookie("refreshToken", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        response.addCookie(cookie);
-
-        log.info("// ✅ 로그아웃 완료 (provider_id: {})", providerId);
+        refreshTokenRepository.flush();
     }
 
-
-    // ===========================================
-    // ✅ 6️⃣ 현재 사용자 조회 및 유틸
-    // ===========================================
-
-    /**
-     * ✅ Refresh Token 추출 (쿠키 또는 헤더)
-     */
-    private String extractRefreshToken(HttpServletRequest request) {
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return request.getHeader("Refresh-Token");
-    }
 }

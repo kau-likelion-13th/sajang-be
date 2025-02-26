@@ -3,7 +3,6 @@ package likelion13th.shop.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import likelion13th.shop.DTO.request.OrderCreateRequest;
 import likelion13th.shop.DTO.response.OrderResponseDto;
-import likelion13th.shop.domain.Order;
 import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
