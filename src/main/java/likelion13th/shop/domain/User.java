@@ -42,7 +42,7 @@ public class User extends BaseEntity {
     // 마일리지 (기본값 0, 비즈니스 메서드로만 관리)
     @Column(nullable = false)
     @Setter(AccessLevel.NONE)
-    private int mileage = 0;
+    private int maxMileage = 0;
 
     // 최근 총 구매액 (기본값 0, 비즈니스 메서드로만 관리)
     @Column(nullable = false)
@@ -72,10 +72,10 @@ public class User extends BaseEntity {
         if (mileage < 0) {
             throw new IllegalArgumentException("사용할 마일리지는 0보다 커야 합니다.");
         }
-        if (this.mileage < mileage) {
+        if (this.maxMileage < mileage) {
             throw new IllegalArgumentException("마일리지가 부족합니다.");
         }
-        this.mileage -= mileage;
+        this.maxMileage -= mileage;
     }
 
     // 마일리지 적립
@@ -83,7 +83,7 @@ public class User extends BaseEntity {
         if (mileage < 0) {
             throw new IllegalArgumentException("적립할 마일리지는 0보다 커야 합니다.");
         }
-        this.mileage += mileage;
+        this.maxMileage += mileage;
     }
 
     // 총 결제 금액 업데이트
