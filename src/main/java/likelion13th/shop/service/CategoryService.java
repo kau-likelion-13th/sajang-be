@@ -23,7 +23,7 @@ public class CategoryService {
     }
 
     // 상품 조회(카테고리별)
-    public List<ItemResponseDto> getItemsByCategory(Category category){
+    public List<ItemResponseDto> getItemsByCategory(Category category) {
         List<Item> items = category.getItems();
         return items.stream()
                 .map(ItemResponseDto::from)

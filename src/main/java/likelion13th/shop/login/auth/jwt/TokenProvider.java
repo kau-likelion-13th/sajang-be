@@ -64,8 +64,9 @@ public class TokenProvider {
 
     /**
      * ✅ 공통적인 JWT 생성 로직
-     * @param providerId 사용자 식별자 (provider_id)
-     * @param authorities 사용자 권한
+     *
+     * @param providerId     사용자 식별자 (provider_id)
+     * @param authorities    사용자 권한
      * @param expirationTime 유효기간
      */
     private String createToken(String providerId, String authorities, long expirationTime) {
@@ -84,6 +85,7 @@ public class TokenProvider {
 
     /**
      * ✅ 토큰 검증
+     *
      * @return 유효하면 true, 그렇지 않으면 false
      */
     public boolean validateToken(String token) {

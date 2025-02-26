@@ -10,10 +10,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // user_id 기반 사용자 찾기 (feature/4)
     Optional<User> findById(Long userId);
+
     boolean existsById(Long userId);
 
     // providerId(카카오 고유 ID) 기반 조회 (feature/4)
     Optional<User> findByProviderId(String providerId);
+
     boolean existsByProviderId(String providerId);
 
     // usernickname(닉네임) 기반 사용자 찾기 (develop)
