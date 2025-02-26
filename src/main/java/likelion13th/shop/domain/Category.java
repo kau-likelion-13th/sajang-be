@@ -21,9 +21,14 @@ public class Category {
     @Setter
     private String name;
 
-    //name 받는 생성자
+    @Column(nullable = false)
+    @Setter
+    private boolean isNew= false;
+
+    // 생성자로 기본 값 설정
     public Category(String name) {
         this.name = name;
+        this.isNew = false;
     }
 
     //Item과 다대다 연관관계 설정
