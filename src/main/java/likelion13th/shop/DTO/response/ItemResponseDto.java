@@ -22,7 +22,7 @@ public class ItemResponseDto {
     private String name;
     private int price;
     private String brand;
-    private String thumbnail;
+    private String imagePath;
     private boolean isNew;
 
     @JsonProperty("isNew")
@@ -37,7 +37,7 @@ public class ItemResponseDto {
                 item.getItem_name(),
                 item.getPrice(),
                 item.getBrand(),
-                item.getThumbnail_img(),
+                item.getImagePath(),
                 item.isNew()
         );
     }
