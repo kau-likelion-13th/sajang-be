@@ -46,8 +46,7 @@ public class Item extends BaseEntity {
     @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
-
-    public Item(String item_name, int price, String thumbnail_img, String brand) {
+    public Item(String item_name, int price, String thumbnail_img, String brand, boolean isNew) {
         this.item_name = item_name;
         this.price = price;
         this.thumbnail_img = thumbnail_img;
