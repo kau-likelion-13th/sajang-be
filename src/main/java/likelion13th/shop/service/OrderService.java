@@ -5,8 +5,8 @@ import likelion13th.shop.DTO.request.OrderCreateRequest;
 import likelion13th.shop.DTO.response.OrderResponseDto;
 import likelion13th.shop.domain.Item;
 import likelion13th.shop.domain.Order;
-import likelion13th.shop.global.constant.OrderStatus;
 import likelion13th.shop.domain.User;
+import likelion13th.shop.global.constant.OrderStatus;
 import likelion13th.shop.repository.ItemRepository;
 import likelion13th.shop.repository.OrderRepository;
 import likelion13th.shop.repository.UserRepository;
@@ -31,7 +31,7 @@ public class OrderService {
         // 사용 가능한 최대 마일리지
         int availableMileage = Math.min(mileageToUse, totalPrice);
         // 최종 결제 금액
-        int finalPrice = totalPrice -  availableMileage;
+        int finalPrice = totalPrice - availableMileage;
         return Math.max(finalPrice, 0);  // 최소 결제 금액 0원 보장
     }
 
@@ -63,7 +63,7 @@ public class OrderService {
         order.setStatus(OrderStatus.PROCESSING);
         //사용자 마일리지 처리
         user.useMileage(mileageToUse);
-        user.addMileage((int)(finalPrice*0.1));//결제 금액의 10% 마일리지 적립
+        user.addMileage((int) (finalPrice * 0.1));//결제 금액의 10% 마일리지 적립
         //최근 결제 금액 업데이트
         user.updateRecentTotal(finalPrice);
         //주문 저장
@@ -107,11 +107,11 @@ public class OrderService {
         User user = order.getUser();
 
         // 회수해야할 마일리지보다 가지고 있는 마일리지가 적을 경우
-        if(user.getMileage()<(int)(order.getFinalPrice()*0.1)){
+        if (user.getMileage() < (int) (order.getFinalPrice() * 0.1)) {
             throw new IllegalArgumentException("마일리지 회수가 불가능해 주문 취소를 할 수 없습니다.");
         }
         // 결제 시에 적립되었던 마일리지 차감 ( 결제 금액의 10%)
-        user.useMileage((int)(order.getFinalPrice()*0.1));
+        user.useMileage((int) (order.getFinalPrice() * 0.1));
 
         //마일리지 환불
         user.addMileage(order.getTotalPrice() - order.getFinalPrice());

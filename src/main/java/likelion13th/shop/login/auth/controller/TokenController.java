@@ -1,6 +1,8 @@
 package likelion13th.shop.login.auth.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.global.api.SuccessCode;
@@ -8,12 +10,8 @@ import likelion13th.shop.global.exception.GeneralException;
 import likelion13th.shop.login.auth.dto.JwtDto;
 import likelion13th.shop.login.dto.UserRequestDto.UserReqDto;
 import likelion13th.shop.login.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -44,33 +42,17 @@ public class TokenController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "USER_2011", description = "회원가입 & 로그인 성공")
     })
     @PostMapping("/generate")
-    public ApiResponse<JwtDto> generateToken(
-            @RequestBody UserReqDto userReqDto,
-            HttpServletResponse response) {
+    public ApiResponse<JwtDto> generateToken(@RequestBody UserReqDto userReqDto) {
         try {
             String providerId = userReqDto.getProviderId();
             log.info("// [generateToken] 요청받은 providerId: {}", providerId);
 
-            // ✅ JWT 생성 (내부적으로 Access/Refresh 포함)
-            JwtDto fullJwt = userService.jwtMakeSave(providerId);
+            // ✅ JWT 생성 (AccessToken + RefreshToken)
+            JwtDto jwt = userService.jwtMakeSave(providerId);
             log.info("// ✅ 토큰 발급 성공 (providerId: {})", providerId);
 
-            // ✅ Refresh Token은 HttpOnly 쿠키로 전송
-            ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", fullJwt.getRefreshToken())
-                    .httpOnly(true)
-                    .secure(true)
-                    .path("/")
-                    .maxAge(60 * 60 * 24 * 7) // 7일
-                    .sameSite("Strict")
-                    .build();
-            response.addHeader("Set-Cookie", refreshTokenCookie.toString());
-
-            // ✅ 프론트에는 Access Token만 반환
-            JwtDto responseJwt = JwtDto.builder()
-                    .accessToken(fullJwt.getAccessToken())
-                    .build();
-
-            return ApiResponse.onSuccess(SuccessCode.USER_LOGIN_SUCCESS, responseJwt);
+            // ✅ 이제 Refresh Token을 JSON 응답으로 직접 반환
+            return ApiResponse.onSuccess(SuccessCode.USER_LOGIN_SUCCESS, jwt);
         } catch (GeneralException e) {
             log.error("// ❌ 회원가입/로그인 중 에러 발생: {}", e.getReason().getMessage());
             throw e;
@@ -79,7 +61,6 @@ public class TokenController {
             throw new GeneralException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 
     // ==========================================

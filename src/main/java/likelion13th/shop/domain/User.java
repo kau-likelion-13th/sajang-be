@@ -19,7 +19,7 @@ public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
+    @Column(name = "user_id")
     @Setter(AccessLevel.PRIVATE)
     private Long id;
 
@@ -58,7 +58,7 @@ public class User extends BaseEntity {
     private Address address;
 
     // 주문 정보 (1:N 관계)
-    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
 
     // 주문 추가 메서드
