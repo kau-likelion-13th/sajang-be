@@ -16,9 +16,9 @@ public class ItemService {
     private final CategoryRepository categoryRepository;
 
     //개별 상품 조회
-    @Transactional
+    /*@Transactional
     public ItemResponseDto getItemById(Long itemId) {
         Item item = itemRepository.findById(itemId).orElse(null);
         return item != null ? ItemResponseDto.from(item) : null;
-    }
+    }*/
 }

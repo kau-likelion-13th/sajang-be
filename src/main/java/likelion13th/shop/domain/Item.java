@@ -33,6 +33,10 @@ public class Item extends BaseEntity {
     @Column(nullable = false)
     private String brand;
 
+    @Column(nullable = false)
+    @Setter
+    private boolean isNew= false;
+
     //Category와 다대다 연관관계 설정
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
@@ -48,6 +52,7 @@ public class Item extends BaseEntity {
         this.price = price;
         this.thumbnail_img = thumbnail_img;
         this.brand = brand;
+        this.isNew= false;
     }
 
 }

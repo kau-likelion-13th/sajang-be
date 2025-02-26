@@ -16,7 +16,7 @@ public class ItemController {
     private final ItemService itemService;
 
     //개별 상품 조회
-    @GetMapping("/{itemId}")
+    /*@GetMapping("/{itemId}")
     @Operation(summary = "상품 개별 조회", description = "상품을 개별 조회합니다.")
     public ApiResponse<?> getItemById(@PathVariable Long itemId) {
         ItemResponseDto item = itemService.getItemById(itemId);
@@ -30,6 +30,6 @@ public class ItemController {
                 SuccessCode.ITEM_GET_SUCCESS,
                 item
         );
-    }
+    }*/
 
 }
