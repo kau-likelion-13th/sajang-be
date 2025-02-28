@@ -48,7 +48,10 @@ public class SecurityConfig {
 
                                 "/token/**",              // 🔑 토큰 재발급 및 생성
                                 "/oauth2/**",             // 🟡 카카오 OAuth 리디렉션
-                                "/login/oauth2/**"        // 🟡 카카오 OAuth 콜백
+                                "/login/oauth2/**",        // 🟡 카카오 OAuth 콜백
+
+                                "/categories/**",         // ✅ 로그인 없이 카테고리 조회 가능
+                                "/items/**"               // ✅ 로그인 없이 상품 조회 가능
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
