@@ -65,11 +65,14 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         JwtDto jwt = userService.jwtMakeSave(providerId);
         log.info("// ✅ JWT 발급 및 RefreshToken 저장 완료 (provider_id: {})", providerId);
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(
-                ApiResponse.onSuccess(SuccessCode.USER_LOGIN_SUCCESS, jwt)
-        ));
+        // ✅ 4️⃣ 프론트엔드로 리다이렉트 (Query Parameter로 JWT 전달)
+        String redirectUrl = String.format(
+                "http://localhost:3000/oauth/callback?access-token=%s",
+                jwt.getAccessToken()
+        );
+
+        log.info("// 🔄 Redirecting to Frontend: {}", redirectUrl);
+        response.sendRedirect(redirectUrl);
 
     }
 }
