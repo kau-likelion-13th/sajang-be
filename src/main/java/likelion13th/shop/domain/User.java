@@ -57,6 +57,11 @@ public class User extends BaseEntity {
     @Embedded
     private Address address;
 
+    // ✅ 주소 저장/수정 메서드 추가
+    public void updateAddress(Address address) {
+        this.address = address;
+    }
+
     // 주문 정보 (1:N 관계)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
