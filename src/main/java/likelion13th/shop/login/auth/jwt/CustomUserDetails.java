@@ -1,5 +1,6 @@
 package likelion13th.shop.login.auth.jwt;
 
+import likelion13th.shop.domain.Address;
 import likelion13th.shop.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,7 @@ public class CustomUserDetails implements UserDetails {
     private Long userId;          // 유저 ID (PK)
     private String providerId;
     private String usernickname;  // 카카오 닉네임
+    private Address address;
     private Collection<? extends GrantedAuthority> authorities;
 
 
@@ -31,6 +33,7 @@ public class CustomUserDetails implements UserDetails {
         this.userId = user.getId();
         this.providerId = user.getProviderId();
         this.usernickname = user.getUsernickname();
+        this.address = user.getAddress();
     }
 
     // ✅ CustomUserDetails 생성자 추가
@@ -39,6 +42,7 @@ public class CustomUserDetails implements UserDetails {
         this.userId = null;  // OAuth2 로그인 시 UserId는 나중에 조회
         this.usernickname = null;
         this.authorities = authorities;
+        this.address = null;
     }
 
     /**
@@ -49,6 +53,7 @@ public class CustomUserDetails implements UserDetails {
                 .userId(entity.getId())                 // user_id (PK)
                 .providerId(entity.getProviderId())     // provider_id
                 .usernickname(entity.getUsernickname()) // 카카오 닉네임
+                .address(entity.getAddress())
                 .build();
     }
 
@@ -60,6 +65,7 @@ public class CustomUserDetails implements UserDetails {
                 .id(this.userId)                        // user_id
                 .providerId(this.providerId)            // provider_id
                 .usernickname(this.usernickname)       // 카카오 닉네임
+                .address(this.address)
                 .build();
     }
 
