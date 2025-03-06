@@ -40,7 +40,10 @@ public enum ErrorCode implements BaseCode { // 실패
     S3_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "S3_500", "S3 업로드에 실패하였습니다."),
     S3_FILE_EMPTY(HttpStatus.BAD_REQUEST, "S3_400", "업로드할 파일이 비어 있습니다."),
     S3_INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST, "S3_401", "유효하지 않은 파일 형식입니다."),
-    ;
+
+
+    // User Address 관련 에러 코드 추가
+    ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "ADDRESS_4041", "해당 사용자의 주소 정보를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

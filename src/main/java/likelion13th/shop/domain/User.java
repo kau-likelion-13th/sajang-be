@@ -57,7 +57,7 @@ public class User extends BaseEntity {
     @Embedded
     private Address address;
 
-    // ✅ 주소 저장/수정 메서드 추가
+    // 주소 저장/수정 메서드 추가
     public void updateAddress(Address address) {
         this.address = address;
     }
