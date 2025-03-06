@@ -3,6 +3,7 @@ package likelion13th.shop.login.auth.utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import likelion13th.shop.domain.Address;
 import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.SuccessCode;
@@ -52,7 +53,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                     .usernickname(nickname)
                     .deletable(true)
                     .build();
-
+            newUser.setAddress(new Address("10540", "경기도 고양시 덕양구 항공대학로 76", "한국항공대학교"));
+            log.info("// ✅ UserEntity address 확인: {}", newUser.getAddress().getAddress()); // ✅ Address 값이 null인지 확인
             // 🟡 2-2. Security 인증 등록
             CustomUserDetails userDetails = new CustomUserDetails(newUser);
             jpaUserDetailsManager.createUser(userDetails);

@@ -34,7 +34,11 @@ public enum SuccessCode implements BaseCode { // 성공
 
     // S3
     S3_UPLOAD_SUCCESS(HttpStatus.OK, "S3_200", "S3 업로드가 성공적으로 완료되었습니다."),
-    ;
+
+
+    // User Address 관련 응답 코드 추가
+    ADDRESS_SAVE_SUCCESS(HttpStatus.CREATED, "ADDRESS_201", "주소 저장에 성공했습니다."),
+    ADDRESS_GET_SUCCESS(HttpStatus.OK, "ADDRESS_200", "주소 조회에 성공했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
