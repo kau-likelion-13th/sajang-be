@@ -123,10 +123,10 @@ public class OrderService {
     }
 
 
-    @Scheduled(fixedRate = 60000) // 60초마다 실행
+    @Scheduled(fixedRate = 3600000) // 이럿케 수정해달랫음
     @Transactional
     public void updateOrderStatus() {
-        // PROCESSING 상태면서 1분 이전에 생성된 주문 찾는 메서드
+        // PROCESSING 상태면서 1 시간 이전에 생성된 주문 찾는 메서드
         List<Order> orders = orderRepository.findByStatusAndCreatedAtBefore(
                 OrderStatus.PROCESSING,
                 LocalDateTime.now().minusMinutes(1)
