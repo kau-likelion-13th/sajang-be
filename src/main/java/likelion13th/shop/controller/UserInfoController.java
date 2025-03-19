@@ -59,7 +59,7 @@ public class UserInfoController {
     }
 
     @GetMapping("/orders/status/{status}")
-    @Operation(summary = "특정 상태의 주문 목록 조회", description = "로그인한 사용자의 특정 상태 주문을 조회합니다.")
+    @Operation(summary = "특정 상태의 주문 목록 조회", description = "로그인한 사용자의 주문을 조회합니다.")
     public ApiResponse<?> getOrdersByStatus(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable OrderStatus status
