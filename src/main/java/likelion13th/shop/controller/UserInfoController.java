@@ -3,7 +3,6 @@ package likelion13th.shop.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import likelion13th.shop.DTO.response.OrderResponseDto;
 import likelion13th.shop.DTO.response.UserInfoResponse;
-import likelion13th.shop.DTO.response.UserMileageResponse;
 import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
@@ -20,13 +19,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/users/profile")
 @RequiredArgsConstructor
 public class UserInfoController {
 
     private final UserService userService;
 
-    @GetMapping("/info")
+    @GetMapping
     @Operation(summary = "사용자 정보 조회", description = "로그인한 사용자의 정보를 조회합니다.")
     public ApiResponse<?> getUserInfo(
             @AuthenticationPrincipal CustomUserDetails customUserDetails
@@ -42,24 +41,8 @@ public class UserInfoController {
         );
     }
 
-    @GetMapping("/mileage")
-    @Operation(summary = "사용자 마일리지 조회", description = "로그인한 사용자의 마일리지를 조회합니다.")
-    public ApiResponse<?> getUserMileage(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
-    ) {
-        User user = userService.findByProviderId(customUserDetails.getProviderId())
-                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
-
-        UserMileageResponse mileageResponse = new UserMileageResponse(user.getMaxMileage());
-
-        return ApiResponse.onSuccess(
-                SuccessCode.USER_MILEAGE_GET_SUCCESS,
-                mileageResponse
-        );
-    }
-
     @GetMapping("/orders/status/{status}")
-    @Operation(summary = "특정 상태의 주문 목록 조회", description = "로그인한 사용자의 주문을 조회합니다.")
+    @Operation(summary = "특정 상태의 주문 목록 조회", description = "로그인한 사용자의 특정 상태 주문을 조회합니다.")
     public ApiResponse<?> getOrdersByStatus(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable OrderStatus status
@@ -74,13 +57,13 @@ public class UserInfoController {
 
         if (orders.isEmpty()) {
             return ApiResponse.onFailure(
-                    ErrorCode.ORDER_NOT_FOUND,
+                    ErrorCode.USER_ORDER_STATUS_NOT_FOUND,
                     status + " 상태의 주문이 없습니다."
             );
         }
 
         return ApiResponse.onSuccess(
-                SuccessCode.ORDER_LIST_SUCCESS,
+                SuccessCode.USER_ORDERS_STATUS_SUCCESS,
                 orders
         );
     }

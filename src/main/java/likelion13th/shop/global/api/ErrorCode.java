@@ -18,10 +18,9 @@ public enum ErrorCode implements BaseCode { // 실패
 
     USER_NOT_AUTHENTICATED(HttpStatus.UNAUTHORIZED, "AUTH_0001", "카카오 로그인 정보가 없습니다."),
 
-    // 사용자 정보 조회 관련 코드 추가
-    USER_INFO_GET_SUCCESS(HttpStatus.OK, "USER_203", "사용자 정보 조회에 성공했습니다."),
-    USER_MILEAGE_GET_SUCCESS(HttpStatus.OK, "USER_204", "사용자 마일리지 조회에 성공했습니다."),
-    USER_ORDERS_STATUS_SUCCESS(HttpStatus.OK, "USER_205", "주문 목록 조회에 성공했습니다."),
+    USER_INFO_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_4042", "사용자 정보를 찾을 수 없습니다."),
+    USER_ORDERS_EMPTY(HttpStatus.NOT_FOUND, "USER_4043", "사용자의 주문 내역이 없습니다."),
+    USER_ORDER_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_4044", "해당 상태의 주문이 없습니다."),
 
     // Jwt
     WRONG_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "JWT_4041", "일치하는 리프레시 토큰이 없습니다."),
