@@ -19,6 +19,11 @@ public enum SuccessCode implements BaseCode { // 성공
 
     USER_MILEAGE_SUCCESS(HttpStatus.OK, "USER_202", "사용 가능한 마일리지를 조회했습니다."),
 
+    // 사용자 정보 조회 관련 코드 추가
+    USER_INFO_GET_SUCCESS(HttpStatus.OK, "USER_203", "사용자 정보 조회에 성공했습니다."),
+    USER_MILEAGE_GET_SUCCESS(HttpStatus.OK, "USER_204", "사용자 마일리지 조회에 성공했습니다."),
+    USER_ORDERS_STATUS_SUCCESS(HttpStatus.OK, "USER_205", "주문 목록 조회에 성공했습니다."),
+
     // Category
     CATEGORY_ITEMS_GET_SUCCESS(HttpStatus.OK, "CATEGORY_2001", "카테고리 상품 조회 성공"),
     CATEGORY_ITEMS_EMPTY(HttpStatus.OK, "CATEGORY_204", "해당 카테고리에 등록된 상품이 없습니다."),

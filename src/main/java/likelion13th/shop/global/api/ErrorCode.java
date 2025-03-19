@@ -18,6 +18,11 @@ public enum ErrorCode implements BaseCode { // 실패
 
     USER_NOT_AUTHENTICATED(HttpStatus.UNAUTHORIZED, "AUTH_0001", "카카오 로그인 정보가 없습니다."),
 
+    // 사용자 정보 조회 관련 코드 추가
+    USER_INFO_GET_SUCCESS(HttpStatus.OK, "USER_203", "사용자 정보 조회에 성공했습니다."),
+    USER_MILEAGE_GET_SUCCESS(HttpStatus.OK, "USER_204", "사용자 마일리지 조회에 성공했습니다."),
+    USER_ORDERS_STATUS_SUCCESS(HttpStatus.OK, "USER_205", "특정 상태의 주문 목록 조회에 성공했습니다."),
+
     // Jwt
     WRONG_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "JWT_4041", "일치하는 리프레시 토큰이 없습니다."),
     IP_NOT_MATCHED(HttpStatus.FORBIDDEN, "JWT_4031", "리프레시 토큰의 IP주소가 일치하지 않습니다."),
