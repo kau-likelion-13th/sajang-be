@@ -69,7 +69,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         // ✅ 4️⃣ 프론트엔드로 리다이렉트 (Query Parameter로 JWT 전달)
         String redirectUrl = String.format(
-                "http://localhost:3000?accessToken=%s",
+                "https://likelionshop.netlify.app/?accessToken=%s",
                 jwt.getAccessToken()
         );
 
