@@ -98,9 +98,10 @@ public class User extends BaseEntity {
 
     // 총 결제 금액 업데이트
     public void updateRecentTotal(int amount) {
-        if (amount < 0) {
-            throw new IllegalArgumentException("최근 결제 금액은 0보다 커야 합니다.");
+        int newTotal = this.recentTotal + amount;
+        if (newTotal < 0) {
+            throw new IllegalArgumentException("총 결제 금액은 음수가 될 수 없습니다.");
         }
-        this.recentTotal += amount;
+        this.recentTotal = newTotal;
     }
 }

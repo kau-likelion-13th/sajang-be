@@ -90,6 +90,7 @@ public class OrderService {
 
     //삭제가 아니라 주문 상태만 변경
     //배송 완료된 상품, 주문 취소된 상품은 주문 취소 불가능
+    @Transactional
     public boolean cancelOrder(Long orderId) {
         Optional<Order> orderOptional = orderRepository.findById(orderId);
 
@@ -116,7 +117,8 @@ public class OrderService {
         //마일리지 환불
         user.addMileage(order.getTotalPrice() - order.getFinalPrice());
 
-        //@Transactional에 의해 자동 저장
+        // 주문 취소 시, 해당 주문의 총 결제 금액 차감
+        user.updateRecentTotal(-order.getTotalPrice());
 
         //return OrderResponseDto.from(order);
         return true;
