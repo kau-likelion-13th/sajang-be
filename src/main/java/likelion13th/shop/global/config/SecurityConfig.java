@@ -81,7 +81,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:3000",
-                "http://SAJANG-dev-env-2.eba-3ycixkjh.ap-northeast-2.elasticbeanstalk.com",
+                "http://sajang-dev.ap-northeast-2.elasticbeanstalk.com",
                 "https://likelionshop.netlify.app"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
