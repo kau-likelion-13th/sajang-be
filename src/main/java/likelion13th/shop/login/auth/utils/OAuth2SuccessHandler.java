@@ -1,12 +1,9 @@
 package likelion13th.shop.login.auth.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import likelion13th.shop.domain.Address;
 import likelion13th.shop.domain.User;
-import likelion13th.shop.global.api.ApiResponse;
-import likelion13th.shop.global.api.SuccessCode;
 import likelion13th.shop.login.auth.dto.JwtDto;
 import likelion13th.shop.login.auth.jwt.CustomUserDetails;
 import likelion13th.shop.login.auth.service.JpaUserDetailsManager;
@@ -17,13 +14,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.util.List;
 
-/**
- * ✅ OAuth2 로그인 성공 시 처리 핸들러
- * - provider_id 기반 회원 확인 및 JWT 발급
- */
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -54,11 +49,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                     .deletable(true)
                     .build();
             newUser.setAddress(new Address("10540", "경기도 고양시 덕양구 항공대학로 76", "한국항공대학교"));
-            log.info("// ✅ UserEntity address 확인: {}", newUser.getAddress().getAddress()); // ✅ Address 값이 null인지 확인
+            log.info("// UserEntity address 확인: {}", newUser.getAddress().getAddress()); // ✅ Address 값이 null인지 확인
             // 🟡 2-2. Security 인증 등록
             CustomUserDetails userDetails = new CustomUserDetails(newUser);
             jpaUserDetailsManager.createUser(userDetails);
-            log.info("// ✅ 신규 회원 등록 완료 (provider_id={})", providerId);
+            log.info("// 신규 회원 등록 완료 (provider_id={})", providerId);
         } else {
             log.info("// ⚠️ 기존 회원 (provider_id={})", providerId);
         }
@@ -67,11 +62,23 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         JwtDto jwt = userService.jwtMakeSave(providerId);
         log.info("// ✅ JWT 발급 및 RefreshToken 저장 완료 (provider_id: {})", providerId);
 
-        // ✅ 4️⃣ 프론트엔드로 리다이렉트 (Query Parameter로 JWT 전달)
-        String redirectUrl = String.format(
-                "https://likelionshop.netlify.app/?accessToken=%s",
-                jwt.getAccessToken()
+        // 4️⃣ 프론트에서 전달한 redirect_uri 파라미터 읽기
+        String frontendRedirectUri = request.getParameter("redirect_uri");
+        // ▶︎ 보안 상, 미리 허용해 둔 URI 리스트에 있는지 검증
+        List<String> authorizedUris = List.of(
+                "https://likelionshop.netlify.app",
+                "http://localhost:3000"
         );
+        if (frontendRedirectUri == null || !authorizedUris.contains(frontendRedirectUri)) {
+            frontendRedirectUri = "https://likelionshop.netlify.app"; // 기본값
+        }
+
+        // accessToken 쿼리 파라미터로 붙여서 리다이렉트
+        String redirectUrl = UriComponentsBuilder
+                .fromUriString(frontendRedirectUri)
+                .queryParam("accessToken", jwt.getAccessToken())
+                .build()
+                .toUriString();
 
         log.info("// 🔄 Redirecting to Frontend: {}", redirectUrl);
         response.sendRedirect(redirectUrl);
