@@ -24,6 +24,7 @@ public class Category {
     @Setter
     private String name;
     //Item과 다대다 연관관계 설정
+
     @ManyToMany
     @JsonIgnore //무한 루프 방지  (카테고리 내부에서 items 목록을 JSON 변환에서 제외)
     @JoinTable(name = "category_item", //중간 테이블 자동으로 생성

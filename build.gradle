@@ -48,7 +48,8 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
     // ✅ Database and Hibernate
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    //runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.33'
     implementation 'org.hibernate.orm:hibernate-core:6.2.7.Final'
 
     // ✅ Lombok
