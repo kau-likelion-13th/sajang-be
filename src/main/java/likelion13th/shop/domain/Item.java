@@ -22,7 +22,7 @@ public class Item extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String item_name;
+    private String itemName;
 
     @Column(nullable = false)
     private int price;
@@ -47,7 +47,7 @@ public class Item extends BaseEntity {
     private List<Order> orders = new ArrayList<>();
 
     public Item(String item_name, int price, String thumbnail_img, String brand, boolean isNew) {
-        this.item_name = item_name;
+        this.itemName = item_name;
         this.price = price;
         this.imagePath = imagePath;
         this.brand = brand;
