@@ -44,6 +44,7 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    // Service 쪽으로 옮기자
     //생성자 -> 객체 생성될 때 자동으로 실행! 즉 초기 설정을 할 때 사용
     public Order(User user, Item item, int quantity) {
         if (quantity <= 0) {

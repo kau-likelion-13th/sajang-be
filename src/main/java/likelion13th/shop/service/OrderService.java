@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
     //마일리지 적용 후 가격에 대한 로직
@@ -124,7 +123,7 @@ public class OrderService {
     }
 
 
-    @Scheduled(fixedRate = 3600000) // 이럿케 수정해달랫음
+    @Scheduled(fixedRate = 60000) // 이럿케 수정해달랫음
     @Transactional
     public void updateOrderStatus() {
         // PROCESSING 상태면서 1 시간 이전에 생성된 주문 찾는 메서드

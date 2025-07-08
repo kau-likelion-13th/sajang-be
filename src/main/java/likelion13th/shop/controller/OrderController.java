@@ -85,11 +85,6 @@ public class OrderController {
         User user = userService.findByProviderId(customUserDetails.getProviderId())
                 .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
         List<OrderResponseDto> orders = orderService.getAllOrders(user);
-        /*if (orders.isEmpty()) {
-            return ApiResponse.onFailure(
-                    ErrorCode.ORDER_NOT_FOUND,
-                    "등록된 주문이 없습니다.");}
-        return ApiResponse.onSuccess(SuccessCode.ORDER_LIST_SUCCESS,orders);*/
 
         // 주문이 없더라도 성공 응답 + 빈 리스트 반환
         if (orders.isEmpty()) {
