@@ -10,7 +10,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,6 +36,7 @@ public class User extends BaseEntity {
 
     // 계정 삭제 가능 여부 (기본값 true)
     @Column(nullable = false)
+    @Setter
     private boolean deletable = true;
 
     // 마일리지 (기본값 0, 비즈니스 메서드로만 관리)
@@ -73,10 +73,11 @@ public class User extends BaseEntity {
 
     // 주문 추가 메서드
     public void addOrder(Order order) {
-        this.orders.add(order);
+        orders.add(order);
         order.setUser(this);
     }
 
+    /** 도메인 내에서 처리 가능한 비즈니스 로직 **/
     // 마일리지 사용
     public void useMileage(int mileage) {
         if (mileage < 0) {

@@ -11,14 +11,12 @@ import likelion13th.shop.global.constant.OrderStatus;
 import likelion13th.shop.global.exception.GeneralException;
 import likelion13th.shop.repository.ItemRepository;
 import likelion13th.shop.repository.OrderRepository;
-import likelion13th.shop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +47,6 @@ public class OrderService {
         int mileageToUse = request.getMileageToUse();
         if (mileageToUse > user.getMaxMileage()) {
             throw new GeneralException(ErrorCode.INVALID_MILEAGE);
-            //throw new IllegalArgumentException("보유한 마일리지를 초과하여 사용할 수 없습니다.");
         }
 
         // 최종 금액 계선
@@ -59,14 +56,16 @@ public class OrderService {
         Order order = new Order(user, item, request.getQuantity());
         order.setTotalPrice(totalPrice);
         order.setFinalPrice(finalPrice);
-        order.setStatus(OrderStatus.PROCESSING);
         //사용자 마일리지 처리
         user.useMileage(mileageToUse);
         user.addMileage((int) (finalPrice * 0.1));//결제 금액의 10% 마일리지 적립
         //최근 결제 금액 업데이트
         user.updateRecentTotal(finalPrice);
+        //연관관계 설정
+        user.addOrder(order);
         //주문 저장
         orderRepository.save(order);
+
 
         return OrderResponseDto.from(order);
     }
@@ -107,7 +106,7 @@ public class OrderService {
             throw new GeneralException(ErrorCode.INVALID_MILEAGE);
         }
         //주문 상태 변경
-        order.setStatus(OrderStatus.CANCEL);
+        order.updateStatus(OrderStatus.CANCEL);
         // 결제 시에 적립되었던 마일리지 차감 ( 결제 금액의 10%)
         user.useMileage((int) (order.getFinalPrice() * 0.1));
 
@@ -134,7 +133,7 @@ public class OrderService {
 
         // 주문 상태를 'COMPLETE' 로 변경
         for (Order order : orders) {
-            order.setStatus(OrderStatus.COMPLETE);
+            order.updateStatus(OrderStatus.COMPLETE);
         }
     }
 
