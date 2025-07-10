@@ -64,20 +64,6 @@ public class UserController {
 
         return ApiResponse.onSuccess(SuccessCode.USER_LOGOUT_SUCCESS, null);
     }
-
-    // 로그인한 사용자의 사용 가능 마일리지 조회
-    @GetMapping("/mileage")
-    @Operation(summary = "사용 가능 마일리지 조회", description = "로그인한 사용자의 사용 가능 마일리지를 조회합니다.")
-    public ApiResponse<UserMileageResponse> getAvailableMileage(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
-    ) {
-        // 로그인한 사용자 정보 조회
-        User user = userService.findByProviderId(customUserDetails.getProviderId())
-                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
-
-        // 사용 가능한 마일리지 반환
-        return ApiResponse.onSuccess(SuccessCode.USER_MILEAGE_SUCCESS, new UserMileageResponse(user.getMaxMileage()));
-    }
 }
 
 
