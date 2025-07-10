@@ -18,20 +18,15 @@ import java.util.stream.Collectors;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    // 카테고리 조회 (Optional 반환)
-    // 카테고리 별 상품 조회 시 카테고리 존재 여부
-    // 여기서 Optional 을 처리해서 보내야함.
-    /*public Optional<Category> findCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId);
-    }*/
-
+    /** 카테고리 존재 여부 확인 **/
     public Category findCategoryById(Long categoryId){
         // 레포지토리에서 찾고 empty 면 예외처리
         return categoryRepository.findById(categoryId)
                 .orElseThrow(()-> new GeneralException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 
-    // 상품 조회(카테고리별)
+    /** 카테고리 별 상품 목록 조회 **/
+    // DTO에 담아서 반환
     public List<ItemResponseDto> getItemsByCategory(Category category) {
         List<Item> items = category.getItems();
         return items.stream()
