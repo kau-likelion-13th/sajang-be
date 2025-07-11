@@ -1,6 +1,7 @@
 package likelion13th.shop.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import likelion13th.shop.DTO.request.OrderCreateRequest;
 import likelion13th.shop.DTO.response.ItemResponseDto;
 import likelion13th.shop.DTO.response.OrderResponseDto;
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Tag(name = "주문", description = "주문 관련 API 입니다.")
 @Slf4j
 @RestController
 @RequestMapping("/orders")
@@ -31,7 +33,7 @@ public class OrderController {
     private final OrderService orderService;
     private final UserService userService;
 
-    // 주문 생성
+    /** 주문 생성 **/
     @PostMapping
     @Operation(summary = "주문 생성", description = "로그인한 사용자의 주문을 생성합니다.")
     public ApiResponse<?> createOrder(
@@ -56,7 +58,7 @@ public class OrderController {
     }
 
 
-    //개별 주문 조회
+    /** 개별 주문 조회 **/
     @GetMapping("/{orderId}")
     @Operation(summary = "주문 개별 조회", description = "로그인한 사용자의 주문을 개별 조회합니다.")
     public ApiResponse<?> deleteOrderById(@PathVariable Long orderId) {
@@ -76,7 +78,7 @@ public class OrderController {
 
     }
 
-    //모든 주문 목록 조회
+    /** 모든 주문 목록 조회 **/
     @GetMapping
     @Operation(summary = "모든 주문 조회", description = "로그인한 사용자의 모든 주문을 목록으로 조회합니다.")
     public ApiResponse<?> getAllOrders(
@@ -93,7 +95,7 @@ public class OrderController {
         return ApiResponse.onSuccess(SuccessCode.ORDER_LIST_SUCCESS, orders);
     }
 
-    //주문 취소
+    /** 주문 취소 **/
     @PutMapping("/{orderId}/cancel")
     @Operation(summary = "주문 취소", description = "로그인한 사용자의 주문을 취소합니다.")
     public ApiResponse<?> cancelOrder(@PathVariable Long orderId) {

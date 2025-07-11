@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
+@Builder // 로그인 관련
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
@@ -36,12 +36,14 @@ public class User extends BaseEntity {
 
     // 계정 삭제 가능 여부 (기본값 true)
     @Column(nullable = false)
-    @Setter
+    // @Setter
     private boolean deletable = true;
 
     // 마일리지 (기본값 0, 비즈니스 메서드로만 관리)
     @Column(nullable = false)
     @Setter(AccessLevel.NONE)
+    /*테이블 단위로 세터가 적용되어있을 경우 얘만 제외시키거나
+    의도적으로 세터 안넣은거라고 명시적이게 표기 */
     private int maxMileage = 0;
 
     // 최근 총 구매액 (기본값 0, 비즈니스 메서드로만 관리)
@@ -54,12 +56,8 @@ public class User extends BaseEntity {
     private RefreshToken auth;
 
     // 주소 정보 (임베디드 타입)
+    @Setter
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "zipcode", column = @Column(name = "zipcode", nullable = false)),
-            @AttributeOverride(name = "address", column = @Column(name = "address", nullable = false)),
-            @AttributeOverride(name = "addressDetail", column = @Column(name = "address_detail", nullable = false))
-    })
     private Address address;
 
     // 주문 정보 (1:N 관계)
@@ -72,7 +70,11 @@ public class User extends BaseEntity {
         order.setUser(this);
     }
 
-    /** 도메인 내에서 처리 가능한 비즈니스 로직 또는 세터 대체 메서드**/
+    /**
+     * 도메인 내에서 처리 가능한 비즈니스 로직 또는 세터 대체 메서드
+     * 도메인 보호를 위해 유효성 검사도 해줍니당.
+     **/
+
     // 마일리지 사용
     public void useMileage(int mileage) {
         if (mileage < 0) {
@@ -94,6 +96,7 @@ public class User extends BaseEntity {
 
     // 총 결제 금액 업데이트
     public void updateRecentTotal(int amount) {
+        // 취소의 경우도 있어서 amount에 대한 유효성 검사는 따로 x
         int newTotal = this.recentTotal + amount;
         if (newTotal < 0) {
             throw new IllegalArgumentException("총 결제 금액은 음수가 될 수 없습니다.");

@@ -12,7 +12,6 @@ import lombok.Setter;
 @Getter
 @Table(name = "orders") //예약어 회피
 @NoArgsConstructor
-//파라미터가 없는 디폴트 생성자 자동으로 생성
 public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +22,13 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private int quantity;
 
-    @Column(nullable = false)
+    // 세터 메서드
     @Setter
+    @Column(nullable = false)
     private int totalPrice; //기존 주문 내역을 유지하기 위해
 
-    @Column(nullable = false)
     @Setter
+    @Column(nullable = false)
     private int finalPrice;
 
     @Enumerated(EnumType.STRING)
@@ -56,8 +56,8 @@ public class Order extends BaseEntity {
         this.status = status;
     }
 
-
     //양방향 편의 메서드
+    @SuppressWarnings("lombok")
     public void setUser(User user) {
         this.user = user;
     }

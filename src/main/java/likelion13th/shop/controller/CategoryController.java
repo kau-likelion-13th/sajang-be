@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Tag(name = "카테고리", description = "카테고리 관련 API 입니다.")
 @Slf4j
 @RestController
 @RequestMapping("/categories")
@@ -31,6 +32,7 @@ public class CategoryController {
     // 상품 조회(카테고리별)
     // 컨트롤러에서 Optional 처리하고 있음
     // 컨트롤러에서는 예외처리만 하고자 함!
+    /** 카테고리 별 상품 조회**/
     @GetMapping("/{categoryId}/items")
     @Operation(summary = "카테고리별 상품 조회", description = "상품을 카테고리 별로 조회합니다.")
     public ApiResponse<?> getItemsByCategory(@PathVariable Long categoryId) {
@@ -38,7 +40,9 @@ public class CategoryController {
 
         // 이제 Exception 잡기!
         try {
+            // 카테고리 존재 여부 확인
             Category category = categoryService.findCategoryById(categoryId);
+
             List<ItemResponseDto> items = categoryService.getItemsByCategory(category);
 
             //상품 없을 시 : 성공 응답 + 빈 리스트 반환
@@ -50,7 +54,6 @@ public class CategoryController {
             log.info("[STEP 2] 카테고리 상품 조회 성공");
             return ApiResponse.onSuccess(SuccessCode.CATEGORY_ITEMS_GET_SUCCESS, items);
         } catch (GeneralException e) {
-            // Service에서 예상한 예외 사항
             log.error("❌ [ERROR] 카테고리 조회 중 예외 발생: {}", e.getReason().getMessage());
             throw e; // 다시 던져서 전역 예외 처리기가 처리하게 함
         } catch (Exception e){

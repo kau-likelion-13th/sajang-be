@@ -20,7 +20,6 @@ public class CategoryService {
 
     /** 카테고리 존재 여부 확인 **/
     public Category findCategoryById(Long categoryId){
-        // 레포지토리에서 찾고 empty 면 예외처리
         return categoryRepository.findById(categoryId)
                 .orElseThrow(()-> new GeneralException(ErrorCode.CATEGORY_NOT_FOUND));
     }

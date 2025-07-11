@@ -21,7 +21,6 @@ public class Category {
     private Long id;
 
     @Column(name = "category_name", nullable = false)
-    @Setter
     private String name;
 
     // Item과 다대다 연관관계 설정
@@ -33,13 +32,13 @@ public class Category {
     private List<Item> items = new ArrayList<>();
 
 
+    /** db에 직접 넣을 경우에는 필요하지 x **/
     // 생성자로 기본 값 설정
-    public Category(String name) {
-        this.name = name;
-    }
+//    public Category(String name) {
+//        this.name = name;
+//    }
 
-    /** 양방향 관계 설정
-    db에 직접 넣을 것이기 떄문에 필요 x **/
+    //양방향 관계 설정
 //    public void addItem(Item item) {
 //        if (!this.items.contains(item)) {
 //            this.items.add(item);

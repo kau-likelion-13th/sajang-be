@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "회원", description = "회원 관련 API 입니다.")
+@Tag(name = "회원", description = "회원 관련 API (토큰 재발급, 로그아웃) 입니다.")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
