@@ -47,6 +47,13 @@ public class UserService {
         return userRepository.findByProviderId(providerId);
     }
 
+    /** 회원 검증용 메서드
+     *  없을 경우 예외 발생 **/
+    public User getAuthenticatedUser(String providerId) {
+        return userRepository.findByProviderId(providerId)
+                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
+    }
+
     // ===========================================
     // ✅ 2️⃣ Refresh Token 관련 서비스
     // ===========================================

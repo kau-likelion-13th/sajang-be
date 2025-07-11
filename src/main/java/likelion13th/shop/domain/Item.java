@@ -42,13 +42,4 @@ public class Item extends BaseEntity {
 
     /** Order과 일대다 연관관계 설정
      * -> Item에서 Order의 목록을 볼 일이 없으므로 단방향 처리 **/
-
-//    public Item(String item_name, int price, String imagePath, String brand, boolean isNew) {
-//        this.itemName = item_name;
-//        this.price = price;
-//        this.imagePath = imagePath;
-//        this.brand = brand;
-//        this.isNew= false;
-//    }
-
 }

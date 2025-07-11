@@ -34,8 +34,7 @@ public class UserInfoController {
     public ApiResponse<?> getUserInfo(
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
-        User user = userService.findByProviderId(customUserDetails.getProviderId())
-                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
+        User user = userService.getAuthenticatedUser(customUserDetails.getProviderId());
 
         UserInfoResponse userInfo = UserInfoResponse.from(user);
 
@@ -61,9 +60,7 @@ public class UserInfoController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
         // 로그인한 사용자 정보 조회
-        User user = userService.findByProviderId(customUserDetails.getProviderId())
-                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
-
+        User user = userService.getAuthenticatedUser(customUserDetails.getProviderId());
         // 사용 가능한 마일리지 반환
         return ApiResponse.onSuccess(SuccessCode.USER_MILEAGE_SUCCESS, new UserMileageResponse(user.getMaxMileage()));
     }

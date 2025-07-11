@@ -11,6 +11,4 @@ import java.util.List;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
     //save, findById, findAll 같은 기본 기능 자동으로 제공됨
-    //카테고리별 아이템 조회
-    //List<Item> findByCategories(Category category);
 }

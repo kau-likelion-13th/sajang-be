@@ -37,9 +37,7 @@ public class OrderController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody OrderCreateRequest request
     ) {
-        User user = userService.findByProviderId(customUserDetails.getProviderId())
-                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
-
+        User user = userService.getAuthenticatedUser(customUserDetails.getProviderId());
         log.info("[STEP 1] 주문 생성 요청 수신...");
         OrderResponse newOrder = orderService.createOrder(request, user);
         log.info("[STEP 2] 주문 생성 성공");
@@ -50,7 +48,7 @@ public class OrderController {
     /** 개별 주문 조회 **/
     @GetMapping("/{orderId}")
     @Operation(summary = "주문 개별 조회", description = "로그인한 사용자의 주문을 개별 조회합니다.")
-    public ApiResponse<?> deleteOrderById(@PathVariable Long orderId) {
+    public ApiResponse<?> getOrderById(@PathVariable Long orderId) {
         log.info("[STEP 1] 개별 주문 조회 요청 수신...");
         OrderResponse order = orderService.getOrderById(orderId);
         log.info("[STEP 2] 개별 주문 조회 성공");
@@ -64,8 +62,7 @@ public class OrderController {
     public ApiResponse<?> getAllOrders(
             @AuthenticationPrincipal CustomUserDetails customUserDetails
     ) {
-        User user = userService.findByProviderId(customUserDetails.getProviderId())
-                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
+        User user = userService.getAuthenticatedUser(customUserDetails.getProviderId());
 
         List<OrderResponse> orders = orderService.getAllOrders(user);
 
