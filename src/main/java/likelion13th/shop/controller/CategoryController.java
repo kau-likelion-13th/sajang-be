@@ -38,27 +38,16 @@ public class CategoryController {
     public ApiResponse<?> getItemsByCategory(@PathVariable Long categoryId) {
         log.info("[STEP 1] 카테고리 상품 조회 요청... categoryId={}", categoryId);
 
-        // 이제 Exception 잡기!
-        try {
-            // 카테고리 존재 여부 확인
-            Category category = categoryService.findCategoryById(categoryId);
+        List<ItemResponseDto> items = categoryService.getItemsByCategory(categoryId);
 
-            List<ItemResponseDto> items = categoryService.getItemsByCategory(category);
-
-            //상품 없을 시 : 성공 응답 + 빈 리스트 반환
-            if (items.isEmpty()) {
-                log.info("[STEP 2] 카테고리에 상품 없음");
-                return ApiResponse.onSuccess(SuccessCode.CATEGORY_ITEMS_EMPTY, Collections.emptyList());
-            }
-
-            log.info("[STEP 2] 카테고리 상품 조회 성공");
-            return ApiResponse.onSuccess(SuccessCode.CATEGORY_ITEMS_GET_SUCCESS, items);
-        } catch (GeneralException e) {
-            log.error("❌ [ERROR] 카테고리 조회 중 예외 발생: {}", e.getReason().getMessage());
-            throw e; // 다시 던져서 전역 예외 처리기가 처리하게 함
-        } catch (Exception e){
-            log.error("❌ [ERROR] 알 수 없는 예외 발생: {}", e.getMessage());
-            throw new GeneralException(ErrorCode.INTERNAL_SERVER_ERROR);
+        //상품 없을 시 : 성공 응답 + 빈 리스트 반환
+        if (items.isEmpty()) {
+            log.info("[STEP 2] 카테고리에 상품 없음");
+            return ApiResponse.onSuccess(SuccessCode.CATEGORY_ITEMS_EMPTY, Collections.emptyList());
         }
+
+        log.info("[STEP 2] 카테고리 상품 조회 성공");
+        return ApiResponse.onSuccess(SuccessCode.CATEGORY_ITEMS_GET_SUCCESS, items);
+
     }
 }

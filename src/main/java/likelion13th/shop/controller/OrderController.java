@@ -44,17 +44,9 @@ public class OrderController {
                 .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
 
         log.info("[STEP 1] 주문 생성 요청 수신...");
-        try {
-            OrderResponseDto newOrder = orderService.createOrder(request, user);
-            log.info("[STEP 2] 주문 생성 성공");
-            return ApiResponse.onSuccess(SuccessCode.ORDER_CREATE_SUCCESS, newOrder);
-        } catch (GeneralException e) {
-            log.error("❌ [ERROR] 주문 생성 중 예외 발생: {}", e.getReason().getMessage());
-            throw e;
-        } catch (Exception e){
-            log.error("❌ [ERROR] 알 수 없는 예외 발생: {}", e.getMessage());
-            throw new GeneralException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+        OrderResponseDto newOrder = orderService.createOrder(request, user);
+        log.info("[STEP 2] 주문 생성 성공");
+        return ApiResponse.onSuccess(SuccessCode.ORDER_CREATE_SUCCESS, newOrder);
     }
 
 
@@ -63,18 +55,9 @@ public class OrderController {
     @Operation(summary = "주문 개별 조회", description = "로그인한 사용자의 주문을 개별 조회합니다.")
     public ApiResponse<?> deleteOrderById(@PathVariable Long orderId) {
         log.info("[STEP 1] 개별 주문 조회 요청 수신...");
-
-        try{
-            OrderResponseDto order = orderService.getOrderById(orderId);
-            log.info("[STEP 2] 개별 주문 조회 성공");
-            return ApiResponse.onSuccess(SuccessCode.ORDER_GET_SUCCESS, order);
-        } catch (GeneralException e) {
-            log.error("❌ [ERROR] 개별 주문 조회 중 예외 발생: {}", e.getReason().getMessage());
-            throw e;
-        } catch (Exception e){
-            log.error("❌ [ERROR] 알 수 없는 예외 발생: {}", e.getMessage());
-            throw new GeneralException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
+        OrderResponseDto order = orderService.getOrderById(orderId);
+        log.info("[STEP 2] 개별 주문 조회 성공");
+        return ApiResponse.onSuccess(SuccessCode.ORDER_GET_SUCCESS, order);
 
     }
 
@@ -86,6 +69,7 @@ public class OrderController {
     ) {
         User user = userService.findByProviderId(customUserDetails.getProviderId())
                 .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
+
         List<OrderResponseDto> orders = orderService.getAllOrders(user);
 
         // 주문이 없더라도 성공 응답 + 빈 리스트 반환
@@ -100,18 +84,10 @@ public class OrderController {
     @Operation(summary = "주문 취소", description = "로그인한 사용자의 주문을 취소합니다.")
     public ApiResponse<?> cancelOrder(@PathVariable Long orderId) {
         log.info("[STEP 1] 주문 취소 요청 수신");
+        orderService.cancelOrder(orderId);
+        log.info("[STEP 2] 주문 취소 성공");
+        return ApiResponse.onSuccess(SuccessCode.ORDER_CANCEL_SUCCESS, "주문이 성공적으로 취소되었습니다.");
 
-        try {
-            orderService.cancelOrder(orderId); // ❌ boolean X → ✅ void로 바뀐 메서드
-            log.info("[STEP 2] 주문 취소 성공");
-            return ApiResponse.onSuccess(SuccessCode.ORDER_CANCEL_SUCCESS, "주문이 성공적으로 취소되었습니다.");
-        } catch (GeneralException e) {
-            log.error("❌ [ERROR] 주문 취소 중 예외 발생: {}", e.getReason().getMessage());
-            throw e;
-        } catch (Exception e) {
-            log.error("❌ [ERROR] 알 수 없는 예외 발생: {}", e.getMessage());
-            throw new GeneralException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
     }
 }
 
