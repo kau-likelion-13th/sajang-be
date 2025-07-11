@@ -1,6 +1,6 @@
 package likelion13th.shop.service;
 
-import likelion13th.shop.DTO.response.ItemResponseDto;
+import likelion13th.shop.DTO.response.ItemResponse;
 import likelion13th.shop.domain.Category;
 import likelion13th.shop.domain.Item;
 import likelion13th.shop.global.api.ErrorCode;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,13 +26,13 @@ public class CategoryService {
 
     /** 카테고리 별 상품 목록 조회 **/
     // DTO에 담아서 반환
-    public List<ItemResponseDto> getItemsByCategory(Long categoryId) {
+    public List<ItemResponse> getItemsByCategory(Long categoryId) {
         // 카테고리 유효성 검사
         Category category = findCategoryById(categoryId);
 
         List<Item> items = category.getItems();
         return items.stream()
-                .map(ItemResponseDto::from)
+                .map(ItemResponse::from)
                 .collect(Collectors.toList());
     }
 }

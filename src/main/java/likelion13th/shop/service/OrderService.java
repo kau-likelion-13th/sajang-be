@@ -2,7 +2,7 @@ package likelion13th.shop.service;
 
 import jakarta.transaction.Transactional;
 import likelion13th.shop.DTO.request.OrderCreateRequest;
-import likelion13th.shop.DTO.response.OrderResponseDto;
+import likelion13th.shop.DTO.response.OrderResponse;
 import likelion13th.shop.domain.Item;
 import likelion13th.shop.domain.Order;
 import likelion13th.shop.domain.User;
@@ -27,7 +27,7 @@ public class OrderService {
 
     /** 주문 생성 **/
     @Transactional
-    public OrderResponseDto createOrder(OrderCreateRequest request, User user) {
+    public OrderResponse createOrder(OrderCreateRequest request, User user) {
         // 상품 조회
         Item item = itemRepository.findById(request.getItemId())
                 .orElseThrow(() -> new GeneralException(ErrorCode.ITEM_NOT_FOUND));
@@ -46,9 +46,8 @@ public class OrderService {
         int finalPrice = totalPrice - availableMileage;
 
         //주문 생성 ( 주문 중으로 설정은 Order.java 생성자에서 )
-        Order order = new Order(user, item, request.getQuantity());
-        order.setTotalPrice(totalPrice);
-        order.setFinalPrice(finalPrice);
+        Order order = Order.create(user, item, request.getQuantity(), totalPrice, finalPrice);
+
 
         //사용자 마일리지 차감 및 적립
         user.useMileage(availableMileage);
@@ -61,23 +60,23 @@ public class OrderService {
         //주문 저장
         orderRepository.save(order);
 
-        return OrderResponseDto.from(order);
+        return OrderResponse.from(order);
     }
 
     /** 개별 주문 조회 **/
     @Transactional
-    public OrderResponseDto getOrderById(Long orderId) {
+    public OrderResponse getOrderById(Long orderId) {
         return orderRepository.findById(orderId)
-                .map(OrderResponseDto::from)
+                .map(OrderResponse::from)
                 .orElseThrow(()->new GeneralException(ErrorCode.ORDER_NOT_FOUND));
     }
 
     /** 로그인한 사용자의 모든 주문 조회 **/
     @Transactional
-    public List<OrderResponseDto> getAllOrders(User user) {
+    public List<OrderResponse> getAllOrders(User user) {
         //프록시 객체 -> DTO로 변환 후 반환
         return user.getOrders().stream()
-                .map(OrderResponseDto::from)
+                .map(OrderResponse::from)
                 .collect(Collectors.toList());
     }
 

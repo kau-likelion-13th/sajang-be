@@ -13,6 +13,8 @@ import lombok.Setter;
 @Table(name = "orders") //예약어 회피
 @NoArgsConstructor
 public class Order extends BaseEntity {
+
+    /** 필드 **/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
@@ -22,10 +24,9 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private int quantity;
 
-    // 세터 메서드
     @Setter
     @Column(nullable = false)
-    private int totalPrice; //기존 주문 내역을 유지하기 위해
+    private int totalPrice; // 기존 주문 내역을 유지하기 위해
 
     @Setter
     @Column(nullable = false)
@@ -35,20 +36,32 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private OrderStatus status;
 
-    //Item, User 와 연관관계 설정
+    /** 연관관계 설정 **/
+    // Item와의 관계 N:1
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_id")
     private Item item;
 
+    // User와의 관계 N:1
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Order(User user, Item item, int quantity) {
+    /** 생성자 및 비즈니스 로직 등등..**/
+    // 내부 생성자 메서드
+    private Order(User user, Item item, int quantity) {
         this.user = user;
         this.item = item;
         this.quantity = quantity;
         this.status = OrderStatus.PROCESSING;
+    }
+
+    // 정적 팩토리 메서드
+    public static Order create(User user, Item item, int quantity, int totalPrice, int finalPrice) {
+        Order order = new Order(user, item, quantity);
+        order.totalPrice = totalPrice;
+        order.finalPrice = finalPrice;
+        return order;
     }
 
     // 주문 상태 업데이트

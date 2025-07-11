@@ -3,10 +3,7 @@ package likelion13th.shop.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import likelion13th.shop.DTO.request.OrderCreateRequest;
-import likelion13th.shop.DTO.response.ItemResponseDto;
-import likelion13th.shop.DTO.response.OrderResponseDto;
-import likelion13th.shop.domain.Category;
-import likelion13th.shop.domain.Order;
+import likelion13th.shop.DTO.response.OrderResponse;
 import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.ErrorCode;
@@ -44,7 +41,7 @@ public class OrderController {
                 .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
 
         log.info("[STEP 1] 주문 생성 요청 수신...");
-        OrderResponseDto newOrder = orderService.createOrder(request, user);
+        OrderResponse newOrder = orderService.createOrder(request, user);
         log.info("[STEP 2] 주문 생성 성공");
         return ApiResponse.onSuccess(SuccessCode.ORDER_CREATE_SUCCESS, newOrder);
     }
@@ -55,7 +52,7 @@ public class OrderController {
     @Operation(summary = "주문 개별 조회", description = "로그인한 사용자의 주문을 개별 조회합니다.")
     public ApiResponse<?> deleteOrderById(@PathVariable Long orderId) {
         log.info("[STEP 1] 개별 주문 조회 요청 수신...");
-        OrderResponseDto order = orderService.getOrderById(orderId);
+        OrderResponse order = orderService.getOrderById(orderId);
         log.info("[STEP 2] 개별 주문 조회 성공");
         return ApiResponse.onSuccess(SuccessCode.ORDER_GET_SUCCESS, order);
 
@@ -70,7 +67,7 @@ public class OrderController {
         User user = userService.findByProviderId(customUserDetails.getProviderId())
                 .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
 
-        List<OrderResponseDto> orders = orderService.getAllOrders(user);
+        List<OrderResponse> orders = orderService.getAllOrders(user);
 
         // 주문이 없더라도 성공 응답 + 빈 리스트 반환
         if (orders.isEmpty()) {
