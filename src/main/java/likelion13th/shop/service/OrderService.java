@@ -9,6 +9,8 @@ import likelion13th.shop.domain.User;
 import likelion13th.shop.global.api.ErrorCode;
 import likelion13th.shop.global.constant.OrderStatus;
 import likelion13th.shop.global.exception.GeneralException;
+import likelion13th.shop.login.auth.jwt.CustomUserDetails;
+import likelion13th.shop.login.service.UserService;
 import likelion13th.shop.repository.ItemRepository;
 import likelion13th.shop.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +26,13 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
+    private final UserService userService;
 
     /** 주문 생성 **/
     @Transactional
-    public OrderResponse createOrder(OrderCreateRequest request, User user) {
+    public OrderResponse createOrder(OrderCreateRequest request, CustomUserDetails customUserDetails) {
+        // 사용자 조회
+        User user = userService.getAuthenticatedUser(customUserDetails.getProviderId());
         // 상품 조회
         Item item = itemRepository.findById(request.getItemId())
                 .orElseThrow(() -> new GeneralException(ErrorCode.ITEM_NOT_FOUND));
@@ -73,7 +78,8 @@ public class OrderService {
 
     /** 로그인한 사용자의 모든 주문 조회 **/
     @Transactional
-    public List<OrderResponse> getAllOrders(User user) {
+    public List<OrderResponse> getAllOrders(CustomUserDetails customUserDetails) {
+        User user = userService.getAuthenticatedUser(customUserDetails.getProviderId());
         //프록시 객체 -> DTO로 변환 후 반환
         return user.getOrders().stream()
                 .map(OrderResponse::from)
