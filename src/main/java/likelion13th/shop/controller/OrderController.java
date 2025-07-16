@@ -25,7 +25,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
-    private final UserService userService;
 
     /** 주문 생성 **/
     @PostMapping
@@ -71,7 +70,7 @@ public class OrderController {
 
         orderService.cancelOrder(orderId);
 
-        return ApiResponse.onSuccess(SuccessCode.ORDER_CANCEL_SUCCESS, "주문이 성공적으로 취소되었습니다.");
+        return ApiResponse.onSuccess(SuccessCode.ORDER_CANCEL_SUCCESS, null);
 
     }
 }
