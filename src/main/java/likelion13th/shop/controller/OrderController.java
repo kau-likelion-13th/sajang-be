@@ -37,18 +37,6 @@ public class OrderController {
         return ApiResponse.onSuccess(SuccessCode.ORDER_CREATE_SUCCESS, newOrder);
     }
 
-
-    /** 개별 주문 조회 **/
-    @GetMapping("/{orderId}")
-    @Operation(summary = "주문 개별 조회", description = "로그인한 사용자의 주문을 개별 조회합니다.")
-    public ApiResponse<?> getOrderById(@PathVariable Long orderId) {
-
-        OrderResponse order = orderService.getOrderById(orderId);
-
-        return ApiResponse.onSuccess(SuccessCode.ORDER_GET_SUCCESS, order);
-
-    }
-
     /** 모든 주문 목록 조회 **/
     @GetMapping
     @Operation(summary = "모든 주문 조회", description = "로그인한 사용자의 모든 주문을 목록으로 조회합니다.")

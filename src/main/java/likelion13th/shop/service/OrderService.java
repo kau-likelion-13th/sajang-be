@@ -68,14 +68,6 @@ public class OrderService {
         return OrderResponse.from(order);
     }
 
-    /** 개별 주문 조회 **/
-    @Transactional
-    public OrderResponse getOrderById(Long orderId) {
-        return orderRepository.findById(orderId)
-                .map(OrderResponse::from)
-                .orElseThrow(()->new GeneralException(ErrorCode.ORDER_NOT_FOUND));
-    }
-
     /** 로그인한 사용자의 모든 주문 조회 **/
     @Transactional
     public List<OrderResponse> getAllOrders(CustomUserDetails customUserDetails) {
