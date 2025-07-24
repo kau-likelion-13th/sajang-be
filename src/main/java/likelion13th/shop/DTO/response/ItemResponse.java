@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemResponseDto {
+public class ItemResponse {
     private Long id;
     private String name;
     private int price;
@@ -25,8 +25,8 @@ public class ItemResponseDto {
     }
 
     // Item → ItemResponseDto 변환
-    public static ItemResponseDto from(Item item) {
-        return new ItemResponseDto(
+    public static ItemResponse from(Item item) {
+        return new ItemResponse(
                 item.getId(),
                 item.getItemName(),
                 item.getPrice(),

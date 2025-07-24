@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "회원", description = "회원 관련 API 입니다.")
+@Tag(name = "회원", description = "회원 관련 API (토큰 재발급, 로그아웃) 입니다.")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -63,20 +63,6 @@ public class UserController {
         userService.logout(request);
 
         return ApiResponse.onSuccess(SuccessCode.USER_LOGOUT_SUCCESS, null);
-    }
-
-    // 로그인한 사용자의 사용 가능 마일리지 조회
-    @GetMapping("/mileage")
-    @Operation(summary = "사용 가능 마일리지 조회", description = "로그인한 사용자의 사용 가능 마일리지를 조회합니다.")
-    public ApiResponse<UserMileageResponse> getAvailableMileage(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
-    ) {
-        // 로그인한 사용자 정보 조회
-        User user = userService.findByProviderId(customUserDetails.getProviderId())
-                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
-
-        // 사용 가능한 마일리지 반환
-        return ApiResponse.onSuccess(SuccessCode.USER_MILEAGE_SUCCESS, new UserMileageResponse(user.getMaxMileage()));
     }
 }
 
