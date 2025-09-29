@@ -1,6 +1,5 @@
 package likelion13th.shop.login.auth.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import likelion13th.shop.domain.Address;
@@ -85,7 +84,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         if (frontendRedirectUri == null || !authorizedUris.contains(frontendRedirectUri)) {
             frontendRedirectUri = "https://likelionshop.netlify.app"; // 기본값
         }
-        
+
         // accessToken 쿼리 파라미터로 붙여서 리다이렉트
         String redirectUrl = UriComponentsBuilder
                 .fromUriString(frontendRedirectUri)
