@@ -20,7 +20,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.List;
 
-
 @Slf4j
 @RequiredArgsConstructor
 @Component

@@ -81,10 +81,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:3000",
-                // "아기 사자 백엔드 배포 주소",
                 "http://sajang-dev.ap-northeast-2.elasticbeanstalk.com",
-                "http://SAJANG-dev-env-2.eba-3ycixkjh.ap-northeast-2.elasticbeanstalk.com/login/oauth2/code/kakao",
-                // "아기 사자 프론트 배포 주소",
                 "https://likelionshop.netlify.app"
 
         ));
