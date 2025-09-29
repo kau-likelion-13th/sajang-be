@@ -7,10 +7,9 @@ import likelion13th.shop.DTO.response.OrderResponse;
 import likelion13th.shop.global.api.ApiResponse;
 import likelion13th.shop.global.api.SuccessCode;
 import likelion13th.shop.login.auth.jwt.CustomUserDetails;
-import likelion13th.shop.login.service.UserService;
 import likelion13th.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,7 @@ import java.util.List;
 
 
 @Tag(name = "주문", description = "주문 관련 API 입니다.")
-@Slf4j
+
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
