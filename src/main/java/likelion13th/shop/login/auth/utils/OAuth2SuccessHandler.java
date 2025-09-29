@@ -20,11 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * OAuth2 로그인 성공 시 후처리를 담당하는 핸들러
- * - 인증 성공 후: 신규 회원 생성(필요 시) → JWT 발급 → 안전한 프론트로 리다이렉트
- * - providerId(카카오 고유 ID)를 "사용자명"으로 사용
- */
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
