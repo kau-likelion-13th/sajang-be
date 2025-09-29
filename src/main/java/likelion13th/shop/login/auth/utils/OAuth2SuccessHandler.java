@@ -61,9 +61,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             // 4-2) 예시 주소 세팅 (실서비스에서는 실제 입력 화면/동의 절차에서 받도록 해야 함)
             //      주의: 개인정보를 로그로 출력하거나 쿼리스트링으로 노출하지 않도록 관리
             newUser.setAddress(new Address("10540", "경기도 고양시 덕양구 항공대학로 76", "한국항공대학교"));
-            // 4-3) Security 저장용 UserDetails로 래핑하여 등록
-            //      - 내부적으로 비밀번호가 필요 없는 소셜 사용자라면, 별도 정책으로 처리
-            log.info("// UserEntity address 확인: {}", newUser.getAddress().getAddress()); // ✅ Address 값이 null인지 확인
+            log.info("// UserEntity address 확인: {}", newUser.getAddress().getAddress()); // Address 값이 null인지 확인
+            // 🟡 2-2. Security 인증 등록
             CustomUserDetails userDetails = new CustomUserDetails(newUser);
             jpaUserDetailsManager.createUser(userDetails);
             log.info("// 신규 회원 등록 완료 (provider_id={})", providerId);
