@@ -85,6 +85,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         if (frontendRedirectUri == null || !authorizedUris.contains(frontendRedirectUri)) {
             frontendRedirectUri = "https://likelionshop.netlify.app"; // 기본값
         }
+        
         // accessToken 쿼리 파라미터로 붙여서 리다이렉트
         String redirectUrl = UriComponentsBuilder
                 .fromUriString(frontendRedirectUri)
