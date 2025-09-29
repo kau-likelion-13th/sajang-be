@@ -61,12 +61,12 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             // 4-2) 예시 주소 세팅 (실서비스에서는 실제 입력 화면/동의 절차에서 받도록 해야 함)
             //      주의: 개인정보를 로그로 출력하거나 쿼리스트링으로 노출하지 않도록 관리
             newUser.setAddress(new Address("10540", "경기도 고양시 덕양구 항공대학로 76", "한국항공대학교"));
-
             // 4-3) Security 저장용 UserDetails로 래핑하여 등록
             //      - 내부적으로 비밀번호가 필요 없는 소셜 사용자라면, 별도 정책으로 처리
+            log.info("// UserEntity address 확인: {}", newUser.getAddress().getAddress()); // ✅ Address 값이 null인지 확인
             CustomUserDetails userDetails = new CustomUserDetails(newUser);
             jpaUserDetailsManager.createUser(userDetails);
-            log.info("신규 회원 등록 완료 - providerId(masked)={}", maskedPid);
+            log.info("// 신규 회원 등록 완료 (provider_id={})", providerId);
         } else {
             log.info("기존 회원 로그인 - providerId(masked)={}", maskedPid);
         }
@@ -76,16 +76,15 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         JwtDto jwt = userService.jwtMakeSave(providerId);
         log.info("JWT 발급 완료 - providerId(masked)={}", maskedPid);
 
-        // 6) 프론트엔드 redirect_uri 화이트리스트 검증
-        //    - Open Redirect 방지: 요청 파라미터의 redirect_uri가 허용된 호스트인지 검사
+        // 6) 프론트에서 전달한 redirect_uri 파라미터 읽기
         String frontendRedirectUri = request.getParameter("redirect_uri");
+        // 보안 상, 미리 허용해 둔 URI 리스트에 있는지 검증
         List<String> authorizedUris = List.of(
                 "https://likelionshop.netlify.app",
                 "http://localhost:3000"
         );
         if (frontendRedirectUri == null || !authorizedUris.contains(frontendRedirectUri)) {
-            // 유효하지 않으면 기본 안전 도메인으로 강제
-            frontendRedirectUri = "https://likelionshop.netlify.app";
+            frontendRedirectUri = "https://likelionshop.netlify.app"; //기본값
         }
 
         // 7) 프론트로 리다이렉트할 URL 구성
