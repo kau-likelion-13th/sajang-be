@@ -61,7 +61,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             // 4-2) 예시 주소 세팅 (실서비스에서는 실제 입력 화면/동의 절차에서 받도록 해야 함)
             //      주의: 개인정보를 로그로 출력하거나 쿼리스트링으로 노출하지 않도록 관리
             newUser.setAddress(new Address("10540", "경기도 고양시 덕양구 항공대학로 76", "한국항공대학교"));
-            log.info("// UserEntity address 확인: {}", newUser.getAddress().getAddress()); // Address 값이 null인지 확인
+            log.info("// UserEntity address 확인: {}", newUser.getAddress().getAddress()); // ✅ Address 값이 null인지 확인
             // 🟡 2-2. Security 인증 등록
             CustomUserDetails userDetails = new CustomUserDetails(newUser);
             jpaUserDetailsManager.createUser(userDetails);
@@ -75,25 +75,28 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         JwtDto jwt = userService.jwtMakeSave(providerId);
         log.info("JWT 발급 완료 - providerId(masked)={}", maskedPid);
 
-        // 6) 프론트에서 전달한 redirect_uri 파라미터 읽기
+        // 4️⃣ 프론트에서 전달한 redirect_uri 파라미터 읽기
         String frontendRedirectUri = request.getParameter("redirect_uri");
-        // 보안 상, 미리 허용해 둔 URI 리스트에 있는지 검증
+        // ▶︎ 보안 상, 미리 허용해 둔 URI 리스트에 있는지 검증
         List<String> authorizedUris = List.of(
                 "https://likelionshop.netlify.app",
                 "http://localhost:3000"
         );
         if (frontendRedirectUri == null || !authorizedUris.contains(frontendRedirectUri)) {
-            frontendRedirectUri = "https://likelionshop.netlify.app"; //기본값
+            frontendRedirectUri = "https://likelionshop.netlify.app"; // 기본값
         }
 
-        // 7) 프론트로 리다이렉트할 URL 구성
-        //    - 현재 코드는 accessToken을 쿼리 파라미터로 전달
-        //    - 보안 권장: 가능하면 HttpOnly Secure 쿠키(서버 설정)로 전달하는 방식을 고려
+        // accessToken 쿼리 파라미터로 붙여서 리다이렉트
         String redirectUrl = UriComponentsBuilder
                 .fromUriString(frontendRedirectUri)
                 .queryParam("accessToken", jwt.getAccessToken())
                 .build()
                 .toUriString();
+
+        // 7) 프론트로 리다이렉트할 URL 구성
+        //    - 현재 코드는 accessToken을 쿼리 파라미터로 전달
+        //    - 보안 권장: 가능하면 HttpOnly Secure 쿠키(서버 설정)로 전달하는 방식을 고려
+      
 
         log.info("Redirecting to authorized frontend host: {}", frontendRedirectUri);
 
