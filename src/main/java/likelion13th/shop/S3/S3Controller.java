@@ -22,12 +22,7 @@ public class S3Controller {
 
     private final S3Service s3Service;  // S3 업로드 서비스 주입
 
-    /**
-     * S3 파일 업로드 API
-     *
-     * @param file Multipart 파일
-     * @return 업로드된 파일 URL
-     */
+    // S3 파일 업로드 API
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "S3 파일 업로드", description = "AWS S3에 이미지를 업로드하고 URL을 반환합니다.")
     public ApiResponse<?> uploadFile(@RequestParam("photo") MultipartFile file) {
@@ -44,9 +39,10 @@ public class S3Controller {
         }
 
         // 3. S3 업로드
-        Optional<String> fileUrl = Optional.ofNullable(s3Service.uploadFile(file));
+        String fileUrl = Optional.ofNullable(s3Service.uploadFile(file))
+                .orElseThrow(() -> new GeneralException(ErrorCode.S3_UPLOAD_FAILED));
 
-        // 4. 결과 반환 (주문 API 스타일)
+        // 4. 결과 반환
         return ApiResponse.onSuccess(SuccessCode.S3_UPLOAD_SUCCESS, fileUrl);
     }
 

@@ -15,10 +15,10 @@ public class Address {
     private String zipcode;
 
     @Column(nullable = false)
-    private String address; // ✅ @Lob 제거
+    private String address;
 
     @Column(name = "address_detail", nullable = false)
-    private String addressDetail; // ✅ @Lob 제거
+    private String addressDetail;
 
     public Address() {
         this.zipcode = "10540";

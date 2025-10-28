@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * ✅ JWT DTO (Access/Refresh 토큰 전달용)
+ * JWT DTO (Access/Refresh 토큰 전달용)
  */
 @Builder
 @ToString
