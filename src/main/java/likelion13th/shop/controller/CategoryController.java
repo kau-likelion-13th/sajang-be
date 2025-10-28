@@ -24,7 +24,7 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    // 상품 조회(카테고리별)
+    // 상품 조회(카테고리별) 왜 안되냐?
     // 컨트롤러에서 Optional 처리하고 있음
     // 컨트롤러에서는 예외처리만 하고자 함!
     /** 카테고리 별 상품 조회**/
