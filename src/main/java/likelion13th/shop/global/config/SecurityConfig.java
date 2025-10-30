@@ -82,7 +82,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:3000",
                 "http://sajang-dev.ap-northeast-2.elasticbeanstalk.com",
-                "https://likelionshop.netlify.app"
+                "https://jimalshop.netlify.app"
 
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
