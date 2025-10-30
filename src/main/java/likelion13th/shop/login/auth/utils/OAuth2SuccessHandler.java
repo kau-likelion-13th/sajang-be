@@ -78,11 +78,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String frontendRedirectUri = request.getParameter("redirect_uri");
         // ▶︎ 보안 상, 미리 허용해 둔 URI 리스트에 있는지 검증
         List<String> authorizedUris = List.of(
-                "https://likelionshop.netlify.app",
+                "https://jimalshop.netlify.app",
                 "http://localhost:3000"
         );
         if (frontendRedirectUri == null || !authorizedUris.contains(frontendRedirectUri)) {
-            frontendRedirectUri = "https://likelionshop.netlify.app"; // 기본값
+            frontendRedirectUri = "https://jimalshop.netlify.app"; // 기본값
         }
 
         // accessToken 쿼리 파라미터로 붙여서 리다이렉트
